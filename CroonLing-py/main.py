@@ -3,8 +3,8 @@ from discord.ext import commands
 import json
 from utils.logger import setup_logger
 from database.db import init_db
-from api.genius_api import GeniusAPI
-from commands.command import CommandHandler
+from apis.genius_api import GeniusAPI
+from commands.commands import CommandHandler
 
 # config.json 파일을 읽어와서 토큰 값을 가져옵니다.
 with open("config.json") as config_file:
