@@ -1,12 +1,12 @@
 import httpx
-import json
+from .api_interface import APIInterface
 
-class GeniusAPI:
+class GeniusAPI(APIInterface):
     def __init__(self, api_token):
         """Genius API 초기화"""
         self.base_url = "https://api.genius.com"
         self.headers = {"Authorization": f"Bearer {api_token}"}
-        
+
     async def get(self, endpoint, params=None):
         """
         비동기 GET 요청을 처리하는 메서드
@@ -19,6 +19,12 @@ class GeniusAPI:
             response.raise_for_status()  # HTTP 에러 발생 시 예외 처리
             return response.json()
 
+    async def request(self, endpoint, params=None):
+        """
+        APIInterface의 request 메서드를 구현
+        """
+        return await self.get(endpoint, params)
+
     async def search(self, artist_name):
         """
         특정 아티스트의 노래를 검색하는 메서드
@@ -26,12 +32,12 @@ class GeniusAPI:
         """
         endpoint = "search"
         params = {"q": artist_name}
-        return await self.get(endpoint, params)
-    
+        return await self.request(endpoint, params)
+
     async def get_song_by_id(self, song_id):
         """
         특정 곡의 상세 정보를 가져오는 메서드
         - song_id: 곡 ID (int)
         """
-        endpoint = f"songs/{song_id}"  # 엔드포인트에 곡 ID 포함
-        return await self.get(endpoint)
+        endpoint = f"songs/{song_id}"
+        return await self.request(endpoint)
