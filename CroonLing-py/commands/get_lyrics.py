@@ -25,12 +25,20 @@ class GetLyricsCommand:
                     search_result = await self.genius_api.search(artist)
                     if search_result and 'response' in search_result and 'hits' in search_result['response']:
                         hits = search_result['response']['hits']
+                        
+                        for hit in hits:
+                            print(hit['result']['title'])  # 각 full_title 값을 출력해봄
+                            # if song.lower() in hit['result']['full_title'].lower():
+                            #     matching_song = hit
+                            #     break  # 첫 번째로 찾으면 반복 종료
+                            
                         matching_song = next(
-                            (hit for hit in hits if song.lower() in hit['result']['title'].lower()), None
+                            (hit for hit in hits if song.lower() in hit['result']['full_title'].lower()), None
                         )
                         if matching_song:
                             song_url = matching_song['result']['url']
-
+                            
+                           
                             # GeniusCrawler로 가사 크롤링
                             self.genius_crawler.start_browser()
                             lyrics = self.genius_crawler.request(song_url)
@@ -40,8 +48,8 @@ class GetLyricsCommand:
                                 await ctx.send(f"'{artist} - {song}'의 가사를 찾을 수 없습니다.")
                                 return
 
-                            # Translator를 이용해 가사 번역
-                            translation_result = self.translator.request(lyrics, request_type="translate")
+                            # # Translator를 이용해 가사 번역
+                            # translation_result = self.translator.request(lyrics, request_type="translate")
 
                             # 가사 결과를 Discord Embed로 전송
                             embed = discord.Embed(
@@ -50,7 +58,7 @@ class GetLyricsCommand:
                                 color=discord.Color.green()
                             )
                             embed.add_field(name="가사", value=lyrics, inline=False)
-                            embed.add_field(name="번역", value=translation_result, inline=False)
+                            # embed.add_field(name="번역", value=translation_result, inline=False)
 
                             await ctx.send(embed=embed)
                         else:
