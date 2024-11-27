@@ -4,6 +4,8 @@ import json
 from apis import GeniusAPI, GeniusCrawler, Translator
 from command_handler import CommandHandler
 
+
+# print("한글이 잘 나오나")
 # config.json 파일을 읽어와서 토큰 값을 가져옵니다.
 with open("config.json") as config_file:
     config = json.load(config_file)

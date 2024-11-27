@@ -1,4 +1,5 @@
-from commands import SearchArtistCommand, GetLyricsCommand
+from commands import SearchArtistCommand, GetLyricsCommand, GetGoogleLyricsCommand
+
 class CommandHandler:
     def __init__(self, bot, genius_api, genius_crawler, translator):
         self.bot = bot
@@ -10,3 +11,5 @@ class CommandHandler:
         self.get_lyrics_command = GetLyricsCommand(bot, genius_api, genius_crawler, translator)
         self.get_lyrics_command.register()
 
+        self.get_google_lyrics_command = GetGoogleLyricsCommand(bot)
+        self.get_google_lyrics_command.register()
