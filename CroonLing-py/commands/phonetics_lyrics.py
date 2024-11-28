@@ -4,11 +4,14 @@ from database.db_manager import DBManager
 from config_loader import load_config
 from apis.translate_chatgpt_api import Translator
 
+# config.json 파일에서 DB 설정 정보 불러오기
+config = load_config()
+
 class PhoneticsLyricsCommand:
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager(config)
-        self.translator = Translator(api_key=config['openai_api_key'])
+        self.db_manager = DBManager()
+        self.translator = Translator()
 
     def register(self):
         """Discord 봇에 명령어 등록"""
@@ -25,16 +28,35 @@ class PhoneticsLyricsCommand:
 
             # 데이터베이스에서 가사 조회
             try:
-                lyrics, _, phonetics_lyrics = self.db_manager.get_lyrics(artist, song)
+                lyrics, translated_lyrics, phonetics_lyrics, korean = self.db_manager.get_lyrics(artist, song)
+                
+                
+                
                 if lyrics:
-                    # 가사 발음 변환이 이미 있는 경우 사용
+                    # 발음 변환 로직 시작
                     if not phonetics_lyrics:
-                        # 가사 발음 변환 요청
+                        # 로마자 발음 변환 요청
                         phonetics_lyrics = self.translator.request(lyrics, request_type="phonetics")
-                        self.db_manager.update_phonetics(artist, song, phonetics_lyrics)
+                        if "오류가 발생했습니다" not in phonetics_lyrics:
+                            self.db_manager.update_phonetics(artist, song, phonetics_lyrics)
+                        else:
+                            await ctx.send(f"로마자 발음 변환 중 오류가 발생했습니다.")
+                            return
+
+            
+                    # 한국어 발음 변환 로직
+                    if not korean:
+                        korean = self.translator.request(phonetics_lyrics, request_type="roman_to_korean")
+                        if "오류가 발생했습니다" not in korean:
+                            self.db_manager.update_korean(artist, song, korean)
+                        else:
+                            await ctx.send(f"한국어 발음 변환 중 오류가 발생했습니다.")
+                            return
+
+                    # 성공적으로 변환된 발음들을 포함한 메시지 출력
                     embed = discord.Embed(
-                        title=f"{artist} - {song} 발음 변환된 가사",
-                        description=phonetics_lyrics,
+                        title=f"{artist} - {song} 발음 변환 결과",
+                        description=f"**로마자 발음:**\n{phonetics_lyrics}",
                         color=discord.Color.purple()
                     )
                     await ctx.send(embed=embed)

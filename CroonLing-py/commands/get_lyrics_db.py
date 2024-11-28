@@ -9,7 +9,7 @@ config = load_config()
 class GetLyricsFromDBCommand:
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager(config)
+        self.db_manager = DBManager()
 
     def register(self):
         """Discord 봇에 명령어 등록"""

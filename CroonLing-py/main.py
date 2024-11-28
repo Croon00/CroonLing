@@ -3,15 +3,23 @@ from discord.ext import commands
 import json
 from apis import GeniusAPI, GeniusCrawler, Translator
 from command_handler import CommandHandler
+from database.db_initialize import initialize_db
 
 
 # print("한글이 잘 나오나")
+
 # config.json 파일을 읽어와서 토큰 값을 가져옵니다.
 with open("config.json") as config_file:
     config = json.load(config_file)
     TOKEN = config['DISCORD_BOT_TOKEN']
     GENIUS_API_TOKEN = config['GENIUS_API_TOKEN']
     OPEN_API_TOKEN = config['OPEN_API_TOKEN']
+
+
+# 데이터베이스 초기화
+initialize_db()  # db_initialize의 초기화 함수 실행
+
+
 
 # Discord 봇 인스턴스 생성
 intents = discord.Intents.default()
@@ -26,7 +34,7 @@ async def on_ready():
 # Genius API, Genius Crawler, Translator 인스턴스 생성
 genius_api_instance = GeniusAPI(api_token=GENIUS_API_TOKEN)
 genius_crawler_instance = GeniusCrawler()
-translator_instance = Translator(api_key=OPEN_API_TOKEN)
+translator_instance = Translator()
 
 # CommandHandler 인스턴스 생성 및 명령어 등록
 command_handler = CommandHandler(bot, genius_api_instance, genius_crawler_instance, translator_instance)

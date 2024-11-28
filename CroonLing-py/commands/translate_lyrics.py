@@ -10,8 +10,8 @@ config = load_config()
 class TranslateLyricsCommand:
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager(config)
-        self.translator = Translator(api_key=config['openai_api_key'])
+        self.db_manager = DBManager()
+        self.translator = Translator()
 
     def register(self):
         """Discord 봇에 명령어 등록"""
@@ -28,13 +28,20 @@ class TranslateLyricsCommand:
 
             # 데이터베이스에서 가사 조회
             try:
-                lyrics, translated_lyrics, _ = self.db_manager.get_lyrics(artist, song)
+                lyrics, translated_lyrics, phonetics_lyrics, korean = self.db_manager.get_lyrics(artist, song)
+
                 if lyrics:
-                    # 가사 번역이 이미 있는 경우 사용
                     if not translated_lyrics:
-                        # 가사 번역 요청
+                        # 번역이 없는 경우 API 호출
                         translated_lyrics = self.translator.request(lyrics, request_type="translate")
-                        self.db_manager.update_translation(artist, song, translated_lyrics)
+                        if "오류가 발생했습니다" not in translated_lyrics:
+                            # 번역 결과를 DB에 저장
+                            self.db_manager.update_translation(artist, song, translated_lyrics)
+                        else:
+                            await ctx.send("가사 번역 중 오류가 발생했습니다.")
+                            return
+
+                    # 번역 결과를 Embed로 출력
                     embed = discord.Embed(
                         title=f"{artist} - {song} 번역된 가사",
                         description=translated_lyrics,
