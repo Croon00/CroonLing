@@ -83,6 +83,7 @@ class GetGoogleLyricsCommand:
                 spans = div.find_all("span", jsname="YS01Ge")
                 for span in spans:
                     lyrics += span.text + "\n"
+                lyrics += "\n"
 
             if lyrics.strip():
                 # 가사 결과를 Discord Embed로 전송
@@ -92,14 +93,14 @@ class GetGoogleLyricsCommand:
                     color=discord.Color.blue()
                 )
 
-                # 삭제 버튼 추가
-                delete_button = Button(label="삭제", style=discord.ButtonStyle.red)
+                # 지우기 버튼 추가
+                delete_button = Button(label="지우기", style=discord.ButtonStyle.red)
 
                 async def delete_button_callback(interaction):
                     if interaction.user == ctx.author:
                         await interaction.message.delete()
                     else:
-                        await interaction.response.send_message("이 메시지는 작성자만 삭제할 수 있습니다.", ephemeral=True)
+                        await interaction.response.send_message("이 메시지는 작성자만 지우기할 수 있습니다.", ephemeral=True)
 
                 delete_button.callback = delete_button_callback
 

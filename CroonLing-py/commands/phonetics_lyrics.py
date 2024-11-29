@@ -3,6 +3,7 @@ from discord.ext import commands
 from database.db_manager import DBManager
 from config_loader import load_config
 from apis.translate_chatgpt_api import Translator
+from discord.ui import Button, View
 
 # config.json 파일에서 DB 설정 정보 불러오기
 config = load_config()
@@ -64,3 +65,20 @@ class PhoneticsLyricsCommand:
                     await ctx.send(f"'{artist} - {song}'의 가사를 데이터베이스에서 찾을 수 없습니다.")
             except Exception as e:
                 await ctx.send(f"데이터베이스에서 가사를 조회하거나 발음 변환하는 중 오류가 발생했습니다: {str(e)}")
+                
+                # 지우기 버튼 추가
+                delete_button = Button(label="지우기", style=discord.ButtonStyle.red)
+
+                async def delete_button_callback(interaction):
+                    if interaction.user == ctx.author:
+                        await interaction.message.delete()
+                    else:
+                        await interaction.response.send_message("이 메시지는 작성자만 지우기할 수 있습니다.", ephemeral=True)
+
+                delete_button.callback = delete_button_callback
+
+                # View에 버튼 추가
+                view = View()
+                view.add_item(delete_button)
+
+                await ctx.send(embed=embed, view=view)            
