@@ -1,4 +1,4 @@
-from commands import SearchArtistCommand, GetLyricsCommand, GetGoogleLyricsCommand, PhoneticsLyricsCommand, TranslateLyricsCommand, GetKoreanLyricsCommand
+from commands import SearchArtistCommand, GetLyricsCommand, GetGoogleLyricsCommand, PhoneticsLyricsCommand, TranslateLyricsCommand, GetKoreanLyricsCommand, GetArtistSongsCommand
 
 class CommandHandler:
     def __init__(self, bot, genius_api, genius_crawler, translator):
@@ -21,6 +21,9 @@ class CommandHandler:
         self.get_lyrics_command.register()
         
         self.get_lyrics_command = GetKoreanLyricsCommand(bot)
+        self.get_lyrics_command.register()
+        
+        self.get_lyrics_command = GetArtistSongsCommand(bot)
         self.get_lyrics_command.register()
         
         

@@ -1,9 +1,14 @@
 import httpx
 from .api_interface import APIInterface
+from config_loader import load_config
 
 class GeniusAPI(APIInterface):
-    def __init__(self, api_token):
+    def __init__(self):
         """Genius API 초기화"""
+        config = load_config()
+        api_token = config.get('GENIUS_API_TOKEN')
+        if not api_token:
+            raise ValueError("GENIUS_API_TOKEN이 config.json에 설정되어 있지 않습니다.")
         self.base_url = "https://api.genius.com"
         self.headers = {"Authorization": f"Bearer {api_token}"}
 
@@ -41,3 +46,26 @@ class GeniusAPI(APIInterface):
         """
         endpoint = f"songs/{song_id}"
         return await self.request(endpoint)
+
+    async def get_artist_songs(self, artist_id, per_page=50):
+        """
+        특정 아티스트의 모든 곡 제목을 가져오는 메서드
+        - artist_id: 아티스트 ID (int)
+        - per_page: 한 페이지당 가져올 곡 수 (기본값: 50)
+        """
+        songs = []
+        page = 1
+        while True:
+            endpoint = f"artists/{artist_id}/songs"
+            params = {
+                "per_page": per_page,
+                "page": page,
+                "sort": "title"  # 제목 순으로 정렬
+            }
+            data = await self.request(endpoint, params)
+            page_songs = data['response']['songs']
+            if not page_songs:
+                break
+            songs.extend(page_songs)
+            page += 1
+        return [song['title'] for song in songs]
