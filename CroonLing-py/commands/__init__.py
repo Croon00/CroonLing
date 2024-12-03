@@ -4,6 +4,7 @@ from .get_lyrics_google import GetGoogleLyricsCommand
 from .phonetics_lyrics import PhoneticsLyricsCommand
 from .translate_lyrics import TranslateLyricsCommand
 from .phonetics_korean import GetKoreanLyricsCommand
+from .get_artist_songs import GetArtistSongsCommand
 
 __all__ = [
     "SearchArtistCommand",
@@ -11,5 +12,6 @@ __all__ = [
     "GetGoogleLyricsCommand",
     "PhoneticsLyricsCommand",
     "TranslateLyricsCommand",
-    "GetKoreanLyricsCommand"
+    "GetKoreanLyricsCommand",
+    "GetArtistSongsCommand"
 ]

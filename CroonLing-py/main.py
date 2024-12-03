@@ -32,7 +32,7 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="!!명령어 로 도움말 확인"))
 
 # Genius API, Genius Crawler, Translator 인스턴스 생성
-genius_api_instance = GeniusAPI(api_token=GENIUS_API_TOKEN)
+genius_api_instance = GeniusAPI()
 genius_crawler_instance = GeniusCrawler()
 translator_instance = Translator()
 

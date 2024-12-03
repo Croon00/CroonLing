@@ -47,6 +47,20 @@ class GeniusAPI(APIInterface):
         endpoint = f"songs/{song_id}"
         return await self.request(endpoint)
 
+    async def search_artist(self, artist_name):
+        """
+        아티스트 이름으로 아티스트 ID를 검색하는 메서드
+        - artist_name: 검색할 아티스트 이름 (string)
+        """
+        endpoint = "search"
+        params = {"q": artist_name}
+        data = await self.request(endpoint, params)
+        for hit in data['response']['hits']:
+            if artist_name.lower() in hit['result']['primary_artist']['name'].lower():
+                return hit['result']['primary_artist']['id']
+        return None
+    
+    
     async def get_artist_songs(self, artist_id, per_page=50):
         """
         특정 아티스트의 모든 곡 제목을 가져오는 메서드
