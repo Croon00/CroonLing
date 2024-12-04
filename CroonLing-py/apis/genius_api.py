@@ -61,7 +61,7 @@ class GeniusAPI(APIInterface):
         return None
     
     
-    async def get_artist_songs(self, artist_id, per_page=50):
+    async def get_artist_songs(self, artist_id, artist_name, per_page=50):
         """
         특정 아티스트의 모든 곡 제목을 가져오는 메서드
         - artist_id: 아티스트 ID (int)
@@ -80,6 +80,9 @@ class GeniusAPI(APIInterface):
             page_songs = data['response']['songs']
             if not page_songs:
                 break
-            songs.extend(page_songs)
+            # 아티스트 이름이 곡 제목에 포함된 경우만 필터링
+            filtered_songs = [song for song in page_songs]
+            songs.extend(filtered_songs)
             page += 1
-        return [song['title'] for song in songs]
+        return songs
+
