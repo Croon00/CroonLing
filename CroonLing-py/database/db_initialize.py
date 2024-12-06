@@ -52,7 +52,6 @@ def initialize_db():
             create_songs_query = """
             CREATE TABLE songs (
                 song_id VARCHAR(255) PRIMARY KEY,  -- Spotify에서 받은 트랙 고유 ID 사용
-                song_name VARCHAR(255) NOT NULL,
                 lyrics TEXT,  -- 가사에 NOT NULL 제약 조건 제거
                 translated_lyrics TEXT,
                 phonetics_lyrics TEXT,
@@ -65,6 +64,19 @@ def initialize_db():
             )
             """
             cursor.execute(create_songs_query)
+
+            # songs_name_kr 테이블 삭제 및 생성
+            drop_songs_name_kr_query = "DROP TABLE IF EXISTS songs_name_kr"
+            cursor.execute(drop_songs_name_kr_query)
+            create_songs_name_kr_query = """
+            CREATE TABLE songs_name_kr (
+                songs_name_kr_id INT AUTO_INCREMENT PRIMARY KEY,
+                song_id VARCHAR(255),  -- Spotify 고유 ID를 외래키로 참조
+                song_name_kr VARCHAR(255),  -- 여러 한국어 곡 이름 저장 가능, NOT NULL 제약 제거
+                FOREIGN KEY (song_id) REFERENCES songs(song_id)
+            )
+            """
+            cursor.execute(create_songs_name_kr_query)
 
             connection.commit()
     finally:
