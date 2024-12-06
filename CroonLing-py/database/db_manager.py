@@ -40,13 +40,13 @@ class DBManager:
         try:
             with connection.cursor() as cursor:
                 select_query = """
-                SELECT lyrics, translated_lyrics, phonetics_lyrics, korean 
+                SELECT lyrics, translated_lyrics, phonetics_lyrics, korean_phonetics_lyrics 
                 FROM songs WHERE artist = %s AND song = %s
                 """
                 cursor.execute(select_query, (artist, song))
                 result = cursor.fetchone()
                 if result:
-                    return result  # lyrics, translated_lyrics, phonetics_lyrics, korean
+                    return result  # lyrics, translated_lyrics, phonetics_lyrics, korean_phonetics_lyrics
                 return None, None, None, None
         except Exception as e:
             print(f"Get lyrics error: {str(e)}")
@@ -84,17 +84,17 @@ class DBManager:
         finally:
             connection.close()
 
-    def update_korean(self, artist, song, korean_lyrics):
+    def update_korean(self, artist, song, korean_phonetics_lyrics):
         """한글 발음 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 update_query = """
-                UPDATE songs SET korean = %s WHERE artist = %s AND song = %s
+                UPDATE songs SET korean_phonetics_lyrics = %s WHERE artist = %s AND song = %s
                 """
-                cursor.execute(update_query, (korean_lyrics, artist, song))
+                cursor.execute(update_query, (korean_phonetics_lyrics, artist, song))
                 connection.commit()
         except Exception as e:
-            print(f"Update korean error: {str(e)}")
+            print(f"Update korean_phonetics_lyrics error: {str(e)}")
         finally:
             connection.close()

@@ -21,24 +21,51 @@ def initialize_db():
             # croonling_db 사용하도록 설정
             use_db_query = "USE croonling_db"
             cursor.execute(use_db_query)
-            
 
-            # songs 테이블 생성
-            create_table_query = """
-            CREATE TABLE IF NOT EXISTS songs (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                artist VARCHAR(255) NOT NULL,
-                song VARCHAR(255) NOT NULL,
-                lyrics TEXT NOT NULL,
-                translated_lyrics TEXT,
-                phonetics_lyrics TEXT,
-                korean TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            # artists 테이블 삭제 및 생성
+            drop_artists_query = "DROP TABLE IF EXISTS artists"
+            cursor.execute(drop_artists_query)
+            create_artists_query = """
+            CREATE TABLE IF NOT EXISTS artists (
+                artist_id VARCHAR(255) PRIMARY KEY,  -- Spotify에서 받은 아티스트 고유 ID 사용
+                artist_name VARCHAR(255) NOT NULL
             )
             """
-            cursor.execute(create_table_query)
+            cursor.execute(create_artists_query)
+
+            # artist_kr 테이블 삭제 및 생성
+            drop_artist_kr_query = "DROP TABLE IF EXISTS artist_kr"
+            cursor.execute(drop_artist_kr_query)
+            create_artist_kr_query = """
+            CREATE TABLE artist_kr (
+                artist_kr_id INT AUTO_INCREMENT PRIMARY KEY,
+                artist_id VARCHAR(255),  -- Spotify 고유 ID를 외래키로 참조
+                artist_kr_name VARCHAR(255),  -- 여러 한국어 이름을 저장 가능, NOT NULL 제약 제거
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+            )
+            """
+            cursor.execute(create_artist_kr_query)
+
+            # songs 테이블 삭제 및 생성
+            drop_songs_query = "DROP TABLE IF EXISTS songs"
+            cursor.execute(drop_songs_query)
+            create_songs_query = """
+            CREATE TABLE songs (
+                song_id VARCHAR(255) PRIMARY KEY,  -- Spotify에서 받은 트랙 고유 ID 사용
+                song_name VARCHAR(255) NOT NULL,
+                lyrics TEXT,  -- 가사에 NOT NULL 제약 조건 제거
+                translated_lyrics TEXT,
+                phonetics_lyrics TEXT,
+                korean_phonetics_lyrics TEXT,
+                track_image_url VARCHAR(2083),  -- 트랙의 이미지 URL 저장
+                popularity INT,  -- 트랙의 인기도 (0-100)
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                artist_id VARCHAR(255),  -- 아티스트 ID를 외래키로 참조
+                FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
+            )
+            """
+            cursor.execute(create_songs_query)
+
             connection.commit()
     finally:
         connection.close()
-        
-    

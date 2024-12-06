@@ -95,7 +95,8 @@ class GetSpotifyArtistCommands:
                 for track in tracks:
                     song_list.append({
                         'title': track['name'],
-                        'url': track['external_urls']['spotify']
+                        'url': track['external_urls']['spotify'],
+                        'id': track['id']
                     })
 
                 # 곡 목록을 번호와 함께 4096자 이하로 분할하여 임베드 생성
@@ -120,73 +121,42 @@ class GetSpotifyArtistCommands:
                     )
                     await ctx.send(embed=embed)
 
-            except Exception as e:
-                await ctx.send(f"오류 발생: {str(e)}")
+                # 곡 번호 입력 대기
+                await ctx.send("원하는 곡의 번호를 입력해주세요.")
 
-        @self.bot.command(name='싱글')
-        async def spotify_artist_singles(ctx, *, artist_name: str):
-            """아티스트의 싱글 곡 목록을 중복 없이 보여줌"""
-            await ctx.send("싱글 곡 정보를 불러오는 중입니다. 잠시만 기다려주세요...")
+                def track_check(m):
+                    return m.author == ctx.author and m.content.isdigit() and 1 <= int(m.content) <= len(song_list)
 
-            try:
-                # 아티스트 검색
-                search_result = await self.spotify_api.search(artist_name, search_type="artist")
-                artists = search_result.get('artists', {}).get('items', [])
+                track_msg = await self.bot.wait_for('message', check=track_check)
+                track_index = int(track_msg.content) - 1
+                selected_track = song_list[track_index]
 
-                if not artists:
-                    await ctx.send(f"'{artist_name}'에 대한 정보를 찾을 수 없습니다.")
-                    return
+                # 가사 / 번역 / 발음 / 재생 버튼 추가
+                view = View()
+                lyrics_button = Button(label="가사", style=discord.ButtonStyle.primary)
+                translation_button = Button(label="번역", style=discord.ButtonStyle.primary)
+                pronunciation_button = Button(label="발음", style=discord.ButtonStyle.primary)
+                play_button = Button(label="재생", url=selected_track['url'], style=discord.ButtonStyle.link)
 
-                # 첫 번째 검색 결과의 아티스트 ID 사용
-                artist_id = artists[0]['id']
-                artist_name = artists[0]['name']
+                async def lyrics_callback(interaction):
+                    await interaction.response.send_message(f"'{selected_track['title']}'의 가사를 불러옵니다...")
 
-                # 아티스트의 싱글 목록 검색
-                singles_result = await self.spotify_api.get(
-                    f"artists/{artist_id}/albums",
-                    params={"include_groups": "single", "limit": 50}
-                )
-                singles = singles_result.get('items', [])
+                async def translation_callback(interaction):
+                    await interaction.response.send_message(f"'{selected_track['title']}'의 번역을 불러옵니다...")
 
-                if not singles:
-                    await ctx.send(f"'{artist_name}'의 싱글 곡 정보를 찾을 수 없습니다.")
-                    return
+                async def pronunciation_callback(interaction):
+                    await interaction.response.send_message(f"'{selected_track['title']}'의 발음을 불러옵니다...")
 
-                # 중복 없이 곡 목록 작성
-                unique_singles = {}
-                for single in singles:
-                    tracks_result = await self.spotify_api.get(f"albums/{single['id']}/tracks")
-                    tracks = tracks_result.get('items', [])
-                    for track in tracks:
-                        if track['name'] not in unique_singles:
-                            unique_singles[track['name']] = {
-                                'title': track['name'],
-                                'url': track['external_urls']['spotify']
-                            }
+                lyrics_button.callback = lyrics_callback
+                translation_button.callback = translation_callback
+                pronunciation_button.callback = pronunciation_callback
 
-                # 곡 목록을 번호와 함께 4096자 이하로 분할하여 임베드 생성
-                chunk_size = 4096
-                chunks = []
-                current_chunk = ""
-                song_list = list(unique_singles.values())
-                for idx, song in enumerate(song_list, 1):
-                    entry = f"{idx}. {song['title']}\n"
-                    if len(current_chunk) + len(entry) > chunk_size:
-                        chunks.append(current_chunk)
-                        current_chunk = entry
-                    else:
-                        current_chunk += entry
-                if current_chunk:
-                    chunks.append(current_chunk)
+                view.add_item(lyrics_button)
+                view.add_item(translation_button)
+                view.add_item(pronunciation_button)
+                view.add_item(play_button)
 
-                # 각 청크를 별도의 임베드로 생성하여 전송
-                for i, chunk in enumerate(chunks):
-                    embed = discord.Embed(
-                        title=f"{artist_name}의 싱글 곡 목록 (페이지 {i+1}/{len(chunks)})",
-                        description=chunk,
-                        color=discord.Color.orange()
-                    )
-                    await ctx.send(embed=embed)
+                await ctx.send(f"'{selected_track['title']}'을(를) 선택하셨습니다.", view=view)
 
             except Exception as e:
                 await ctx.send(f"오류 발생: {str(e)}")
