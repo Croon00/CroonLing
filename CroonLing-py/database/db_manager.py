@@ -1,4 +1,4 @@
-from pymysql import connect
+from pymysql import connect, MySQLError
 from config_loader import load_config
 
 # config.json 파일에서 DB 설정 정보 불러오기
@@ -18,83 +18,153 @@ class DBManager:
             port=self.config['port']
         )
 
-    def insert_song(self, artist, song, lyrics):
-        """가수와 곡 정보를 삽입"""
+    def insert_song(self, artist_id, song_id, lyrics):
+        """곡 정보를 삽입"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 insert_query = """
-                INSERT INTO songs (artist, song, lyrics)
+                INSERT INTO songs (artist_id, song_id, lyrics)
                 VALUES (%s, %s, %s)
                 """
-                cursor.execute(insert_query, (artist, song, lyrics))
+                cursor.execute(insert_query, (artist_id, song_id, lyrics))
                 connection.commit()
-        except Exception as e:
+        except MySQLError as e:
             print(f"Insert song error: {str(e)}")
         finally:
             connection.close()
 
-    def get_lyrics(self, artist, song):
+    def get_lyrics(self, artist_name, song_name):
         """가사 정보 조회"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 select_query = """
-                SELECT lyrics, translated_lyrics, phonetics_lyrics, korean_phonetics_lyrics 
-                FROM songs WHERE artist = %s AND song = %s
+                SELECT s.lyrics, s.translated_lyrics, s.phonetics_lyrics, s.korean_phonetics_lyrics
+                FROM songs s
+                JOIN artists a ON s.artist_id = a.artist_id
+                WHERE a.artist_name = %s AND s.song_name = %s
                 """
-                cursor.execute(select_query, (artist, song))
+                cursor.execute(select_query, (artist_name, song_name))
                 result = cursor.fetchone()
-                if result:
-                    return result  # lyrics, translated_lyrics, phonetics_lyrics, korean_phonetics_lyrics
-                return None, None, None, None
-        except Exception as e:
+                return result if result else (None, None, None, None)
+        except MySQLError as e:
             print(f"Get lyrics error: {str(e)}")
             return None, None, None, None
         finally:
             connection.close()
 
-    def update_translation(self, artist, song, translated_lyrics):
+    def update_translation(self, song_id, translated_lyrics):
         """번역된 가사 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 update_query = """
-                UPDATE songs SET translated_lyrics = %s WHERE artist = %s AND song = %s
+                UPDATE songs SET translated_lyrics = %s WHERE song_id = %s
                 """
-                cursor.execute(update_query, (translated_lyrics, artist, song))
+                cursor.execute(update_query, (translated_lyrics, song_id))
                 connection.commit()
-        except Exception as e:
+        except MySQLError as e:
             print(f"Update translation error: {str(e)}")
         finally:
             connection.close()
 
-    def update_phonetics(self, artist, song, phonetics_lyrics):
+    def update_phonetics(self, song_id, phonetics_lyrics):
         """로마자 발음 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 update_query = """
-                UPDATE songs SET phonetics_lyrics = %s WHERE artist = %s AND song = %s
+                UPDATE songs SET phonetics_lyrics = %s WHERE song_id = %s
                 """
-                cursor.execute(update_query, (phonetics_lyrics, artist, song))
+                cursor.execute(update_query, (phonetics_lyrics, song_id))
                 connection.commit()
-        except Exception as e:
+        except MySQLError as e:
             print(f"Update phonetics error: {str(e)}")
         finally:
             connection.close()
 
-    def update_korean(self, artist, song, korean_phonetics_lyrics):
+    def update_korean(self, song_id, korean_phonetics_lyrics):
         """한글 발음 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 update_query = """
-                UPDATE songs SET korean_phonetics_lyrics = %s WHERE artist = %s AND song = %s
+                UPDATE songs SET korean_phonetics_lyrics = %s WHERE song_id = %s
                 """
-                cursor.execute(update_query, (korean_phonetics_lyrics, artist, song))
+                cursor.execute(update_query, (korean_phonetics_lyrics, song_id))
                 connection.commit()
-        except Exception as e:
+        except MySQLError as e:
             print(f"Update korean_phonetics_lyrics error: {str(e)}")
+        finally:
+            connection.close()
+
+    def get_artist_info(self, artist_name):
+        """가수 정보를 조회"""
+        connection = self._get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = """
+                SELECT artist_id
+                FROM artists
+                WHERE artist_name = %s
+                """
+                cursor.execute(query, (artist_name,))
+                return cursor.fetchone()
+        except MySQLError as e:
+            print(f"Get artist info error: {str(e)}")
+            return None
+        finally:
+            connection.close()
+
+    def insert_artist_name_kr(self, artist_id, korean_artist_name):
+        """한국어 가수 이름을 삽입"""
+        connection = self._get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = """
+                INSERT INTO artist_kr (artist_id, artist_kr_name)
+                VALUES (%s, %s)
+                """
+                cursor.execute(query, (artist_id, korean_artist_name))
+                connection.commit()
+                return True
+        except MySQLError as e:
+            print(f"Insert artist name KR error: {str(e)}")
+            return False
+        finally:
+            connection.close()
+
+    def insert_song_name_kr(self, song_id, korean_song_name):
+        """한국어 곡 이름을 삽입"""
+        connection = self._get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = """
+                INSERT INTO songs_name_kr (song_id, song_name_kr)
+                VALUES (%s, %s)
+                """
+                cursor.execute(query, (song_id, korean_song_name))
+                connection.commit()
+                return True
+        except MySQLError as e:
+            print(f"Insert song name KR error: {str(e)}")
+            return False
+        finally:
+            connection.close()
+
+    def is_song_saved(self, artist_name, song_name):
+        """곡이 이미 저장되었는지 확인"""
+        connection = self._get_connection()
+        try:
+            with connection.cursor() as cursor:
+                query = """
+                SELECT 1
+                FROM songs s
+                JOIN artists a ON s.artist_id = a.artist_id
+                WHERE a.artist_name = %s AND s.song_name = %s
+                """
+                cursor.execute(query, (artist_name, song_name))
+                return cursor.fetchone() is not None
         finally:
             connection.close()
