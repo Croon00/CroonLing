@@ -1,12 +1,10 @@
 import discord
 from discord.ext import commands
-from database.db_manager import DBManager
 
 
 class ArtistNameInputCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager()
 
     @commands.command(name='가수이름입력')
     async def input_artist_name(self, ctx, *, artist_name: str):

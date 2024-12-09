@@ -2,26 +2,12 @@ import discord
 from discord.ext import commands
 from discord.ui import Button, View
 from apis.spotify_api import SpotifyAPI
-from service.save_handler import SaveHandler
-from service.info_handler import InfoHandler
-from service.lyrics_handler import LyricsHandler
-from service.translation_handler import TranslationHandler
-from service.phonetics_handler import PhoneticsHandler
-from service.korean_phonetics_handler import KoreanPhoneticsHandler
-from service.song_name_handler import SongNameHandler
 
 
 class GetSpotifyAllTracksCommands:
     def __init__(self, bot):
         self.bot = bot
         self.spotify_api = SpotifyAPI()
-        self.save_handler = SaveHandler()
-        self.info_handler = InfoHandler()
-        self.lyrics_handler = LyricsHandler()
-        self.translation_handler = TranslationHandler()
-        self.phonetics_handler = PhoneticsHandler()
-        self.korean_phonetics_handler = KoreanPhoneticsHandler()
-        self.song_name_handler = SongNameHandler()
 
     def register(self):
         @self.bot.command(name='모든곡')

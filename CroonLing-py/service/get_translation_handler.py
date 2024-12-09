@@ -1,9 +1,9 @@
-from database.db_manager import DBManager
+from database.translations_db import TranslationsDB
 
 
-class TranslationHandler:
+class GetTranslationHandler:
     def __init__(self):
-        self.db_manager = DBManager()
+        self.db_manager = TranslationsDB()
 
     def get_translated_lyrics(self, artist, song):
         """

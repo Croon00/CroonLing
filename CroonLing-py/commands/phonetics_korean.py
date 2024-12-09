@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from database.db_manager import DBManager
 from apis.translate_chatgpt_api import Translator
 from discord.ui import Button, View
 
@@ -8,7 +7,6 @@ from discord.ui import Button, View
 class GetKoreanLyricsCommand:
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager()
         self.translator = Translator()
 
     def register(self):

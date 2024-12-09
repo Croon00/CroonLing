@@ -1,12 +1,10 @@
 import discord
 from discord.ext import commands
-from database.db_manager import DBManager
 
 
 class SongNameInputCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db_manager = DBManager()
 
     @commands.command(name='곡이름입력')
     async def input_song_name(self, ctx, *, query: str):

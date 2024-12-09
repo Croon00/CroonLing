@@ -1,15 +1,11 @@
-import discord
 from discord.ext import commands
 from discord.ui import Button, View
-from service.translation_handler import TranslationHandler
-from service.lyrics_handler import LyricsHandler
+import discord
 
 
 class TranslateLyricsCommands:
     def __init__(self, bot):
         self.bot = bot
-        self.translation_handler = TranslationHandler()
-        self.lyrics_handler = LyricsHandler()
 
     def register(self):
         @self.bot.command(name='번역')
@@ -26,7 +22,7 @@ class TranslateLyricsCommands:
                     await ctx.send("올바른 형식으로 입력해주세요. 예: !!번역 Aimer, Torches")
                     return
 
-                # 가수와 노래 제목 파싱
+                # 가수 이름과 곡 이름 분리
                 artist_name, song_name = map(str.strip, input_text.split(',', 1))
 
                 # 데이터베이스에서 가사 조회
@@ -37,13 +33,15 @@ class TranslateLyricsCommands:
 
                 # 데이터베이스에서 번역된 가사 조회
                 translated_lyrics = self.translation_handler.get_translated_lyrics(artist_name, song_name)
+
                 if translated_lyrics:
+                    # 이미 번역된 가사가 있는 경우 Embed로 보여줌
                     embed = discord.Embed(
                         title=f"'{artist_name}'의 '{song_name}' 번역된 가사",
                         description=translated_lyrics,
                         color=discord.Color.green()
                     )
-                    await ctx.send("이미 번역된 가사가 있습니다:", embed=embed)
+                    await ctx.send("이미 번역된 가사가 존재합니다:", embed=embed)
                     return
 
                 # 번역 작업 시작
@@ -55,16 +53,16 @@ class TranslateLyricsCommands:
                     return
 
                 # 번역 결과 저장
-                self.translation_handler.save_translated_lyrics(artist_name, song_name, translated_lyrics)
+                self.save_translation_handler.save_translated_lyrics(artist_name, song_name, translated_lyrics)
 
-                # 번역 결과 출력
+                # 번역된 가사를 Embed로 출력
                 embed = discord.Embed(
                     title=f"'{artist_name}'의 '{song_name}' 번역된 가사",
                     description=translated_lyrics,
                     color=discord.Color.blue()
                 )
 
-                # 번역된 가사를 보여주는 Embed와 지우기 버튼
+                # 삭제 버튼 추가
                 delete_button = Button(label="지우기", style=discord.ButtonStyle.red)
 
                 async def delete_callback(interaction):
