@@ -1,41 +1,35 @@
 from database.songs_db import SongsDB
-
+from database.artists_db import ArtistsDB
 
 class SaveHandler:
     def __init__(self):
-        self.songs_db = SongsDB()  # SongsDB를 사용하여 곡 관련 DB 작업 처리
+        self.songs_db = SongsDB()
+        self.artists_db = ArtistsDB()
 
-    def save_tracks(self, track_list):
+    def save_track(self, track):
         """
-        DB에 tracks 저장
-        이미 저장된 트랙이 있을 경우 알림
-
+        DB에 트랙 저장
         Parameters:
-        - track_list: 트랙 정보 리스트 (각 요소는 딕셔너리)
-          - artist_name: 아티스트 이름
-          - album_name: 앨범 이름 (없으면 None)
-          - song_id: 트랙 ID
-          - song_title: 트랙 제목
-          - release_date: 발매일
-          - track_image_url: 트랙 이미지 URL
-
-        Returns:
-        - 저장된 트랙과 중복된 트랙 정보를 반환
+        - track: 트랙 정보 딕셔너리
         """
-        saved_tracks = []
-        duplicate_tracks = []
-
-        for track in track_list:
-            # 곡이 이미 저장되어 있는지 확인
-            if not self.songs_db.is_song_saved(track["artist_name"], track["song_title"]):
-                # 곡을 DB에 삽입
-                self.songs_db.insert_song(track)
-                saved_tracks.append(track)
-            else:
-                # 중복된 곡으로 처리
-                duplicate_tracks.append(track)
-
-        return {
-            "saved_tracks": saved_tracks,
-            "duplicate_tracks": duplicate_tracks,
-        }
+        artist_id = track["artist_id"]
+        artist_name = track["artist_name"]
+        
+        
+        # 아티스트 저장 여부 확인 및 저장
+        if not self.artists_db.is_artist_saved(artist_id):
+            self.artists_db.insert_artist_name(artist_id, artist_name)
+        
+        
+        # 곡 저장 여부 확인
+        if not self.songs_db.is_song_saved(artist_name, track["song_name"]):
+            self.songs_db.insert_song(
+                {
+                    "song_id": track["song_id"],
+                    "song_name": track["song_name"],
+                    "artist_id": track["artist_id"],
+                    "release_date": track.get("release_date"),
+                    "track_image_url": track.get("track_image_url"),
+                    "album_name": track.get("album_name")
+                }
+            )

@@ -1,11 +1,11 @@
 import discord
 from discord.ui import Button
-
+from service.get_phonetics_handler import GetPhoneticsHandler
 
 class PhoneticsButton(Button):
-    def __init__(self, phonetics_handler, track):
+    def __init__(self, track):
         super().__init__(label="발음", style=discord.ButtonStyle.primary)
-        self.phonetics_handler = phonetics_handler
+        self.phonetics_handler = GetPhoneticsHandler()
         self.track = track
 
     async def callback(self, interaction):

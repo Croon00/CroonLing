@@ -2,7 +2,7 @@ from database.base_db import BaseDB
 from pymysql import MySQLError
 
 class SongsDB(BaseDB):
-    def insert_song(self, track, artist_id):
+    def insert_song(self, track):
         """곡 정보를 삽입"""
         connection = self._get_connection()
         try:
@@ -13,10 +13,10 @@ class SongsDB(BaseDB):
                 """
                 cursor.execute(query, (
                     track["song_id"],
-                    artist_id,
-                    track["song_title"],
-                    track["release_date"],
-                    track["track_image_url"],
+                    track["artist_id"],
+                    track["song_name"],
+                    track.get("release_date"),
+                    track.get("track_image_url"),
                     track.get("album_name"),
                 ))
                 connection.commit()

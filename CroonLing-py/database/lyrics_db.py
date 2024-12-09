@@ -14,16 +14,26 @@ class LyricsDB(BaseDB):
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
+                
+                
+                cursor.execute(
+                    "SELECT * FROM artists"
+                )
+                temp = cursor.fetchone()
+                
+                
                 # 아티스트 ID 가져오기
                 cursor.execute(
                     "SELECT artist_id FROM artists WHERE artist_name = %s", (artist_name,)
                 )
                 artist_result = cursor.fetchone()
 
+                
                 if not artist_result:
                     raise ValueError(f"'{artist_name}'는 데이터베이스에 존재하지 않습니다.")
 
                 artist_id = artist_result[0]
+                
 
                 # 곡 ID 가져오기
                 cursor.execute(
@@ -31,6 +41,7 @@ class LyricsDB(BaseDB):
                     (artist_id, song_name),
                 )
                 song_result = cursor.fetchone()
+                
 
                 if not song_result:
                     raise ValueError(f"'{song_name}'는 데이터베이스에 존재하지 않습니다.")

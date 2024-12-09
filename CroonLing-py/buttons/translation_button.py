@@ -1,14 +1,19 @@
 import discord
 from discord.ui import Button
-
+from service import (
+    GetTranslationHandler,
+    GetLyricsHandler,
+    SaveHandler
+    
+)
 
 class TranslationButton(Button):
-    def __init__(self, translation_handler, lyrics_handler, track, save_handler):
+    def __init__(self, track):
         super().__init__(label="번역", style=discord.ButtonStyle.primary)
-        self.translation_handler = translation_handler
-        self.lyrics_handler = lyrics_handler
+        self.translation_handler = GetTranslationHandler()
+        self.lyrics_handler = GetLyricsHandler()
         self.track = track
-        self.save_handler = save_handler
+        self.save_handler = SaveHandler()
 
     async def callback(self, interaction):
         is_saved = self.save_handler.db_manager.is_song_saved(self.track['artist_name'], self.track['song_title'])

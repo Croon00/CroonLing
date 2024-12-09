@@ -7,12 +7,9 @@ class GetLyricsHandler:
 
     def get_lyrics(self, artist_name, song_name):
         """
-        특정 곡의 저장된 가사 조회
+        특정 곡의 가사를 반환
         :param artist_name: 가수 이름
         :param song_name: 곡 제목
-        :return: 저장된 가사 또는 '저장되지 않은 곡입니다.'
+        :return: 곡의 lyrics (가사 문자열) 또는 None
         """
-        lyrics = self.lyrics_db.get_lyrics(artist_name, song_name)
-        if lyrics:
-            return lyrics
-        return "저장되지 않은 곡입니다."
+        return self.lyrics_db.get_lyrics(artist_name, song_name)

@@ -32,7 +32,6 @@ class SaveLyricsService:
         # 가사 섹션 찾기
         lyrics_divs = soup.find_all("div", class_="ujudUb")
         if not lyrics_divs:
-            print("가사 섹션을 찾을 수 없습니다.")
             return None
 
         # 가사 추출
@@ -48,5 +47,4 @@ class SaveLyricsService:
             self.lyrics_db.insert_lyrics(artist_name, song_name, lyrics.strip())
             return lyrics.strip()
 
-        print("가사가 비어 있습니다.")
         return None

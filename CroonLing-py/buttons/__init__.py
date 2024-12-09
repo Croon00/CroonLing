@@ -4,4 +4,5 @@ from .lyrics_button import LyricsButton
 from .translation_button import TranslationButton
 from .phonetics_button import PhoneticsButton
 from .korean_phonetics_button import KoreanPhoneticsButton
+from .end_button import EndButton
 # from .song_name_button import SongNameButton
