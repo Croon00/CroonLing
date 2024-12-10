@@ -5,11 +5,12 @@ class GetLyricsHandler:
     def __init__(self):
         self.lyrics_db = LyricsDB()
 
-    def get_lyrics(self, artist_name, song_name):
+    def get_lyrics(self, song_id):
         """
         특정 곡의 가사를 반환
-        :param artist_name: 가수 이름
-        :param song_name: 곡 제목
-        :return: 곡의 lyrics (가사 문자열) 또는 None
+        :param song_id: 곡 고유 id
         """
-        return self.lyrics_db.get_lyrics(artist_name, song_name)
+        lyrics = self.lyrics_db.get_lyrics(song_id)
+        if lyrics:
+            return lyrics
+        return None

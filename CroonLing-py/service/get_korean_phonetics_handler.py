@@ -5,11 +5,11 @@ class GetKoreanPhoneticsHandler:
     def __init__(self):
         self.translations_db = TranslationsDB()
 
-    def get_korean_phonetics(self, artist, song):
+    def get_korean_phonetics(self, song_id):
         """
         곡의 한글 발음 가져오기
         """
-        korean_phonetics = self.translations_db.get_korean_phonetics(artist, song)
+        korean_phonetics = self.translations_db.get_korean_phonetics(song_id)
         if korean_phonetics:
             return korean_phonetics
-        return "저장되지 않은 곡입니다."
+        return None

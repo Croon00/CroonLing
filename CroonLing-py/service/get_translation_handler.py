@@ -5,11 +5,11 @@ class GetTranslationHandler:
     def __init__(self):
         self.db_manager = TranslationsDB()
 
-    def get_translated_lyrics(self, artist, song):
+    def get_translated_lyrics(self, song_id):
         """
         번역된 가사 가져오기
         """
-        translated_lyrics = self.db_manager.get_translated_lyrics(artist, song)
+        translated_lyrics = self.db_manager.get_translated_lyrics(song_id)
         if translated_lyrics:
             return translated_lyrics
-        return "저장되지 않은 곡입니다."
+        return None

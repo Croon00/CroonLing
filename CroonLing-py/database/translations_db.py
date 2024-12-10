@@ -3,7 +3,7 @@ from pymysql import MySQLError
 
 class TranslationsDB(BaseDB):
     def update_translation(self, song_id, translated_lyrics):
-        """번역된 가사 업데이트"""
+        """번역된 가사 삽입 또는 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
@@ -18,7 +18,7 @@ class TranslationsDB(BaseDB):
             connection.close()
 
     def update_phonetics(self, song_id, phonetics_lyrics):
-        """로마자 발음 업데이트"""
+        """로마자 발음 삽입 또는 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
@@ -33,7 +33,7 @@ class TranslationsDB(BaseDB):
             connection.close()
 
     def update_korean_phonetics(self, song_id, korean_phonetics_lyrics):
-        """한국어 발음 업데이트"""
+        """한국어 발음 삽입 또는 업데이트"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
@@ -47,18 +47,17 @@ class TranslationsDB(BaseDB):
         finally:
             connection.close()
 
-    def get_translated_lyrics(self, artist_name, song_name):
+    def get_translated_lyrics(self, song_id):
         """번역된 가사 조회"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 query = """
-                SELECT s.translated_lyrics
-                FROM songs s
-                JOIN artists a ON s.artist_id = a.artist_id
-                WHERE a.artist_name = %s AND s.song_name = %s
+                SELECT translated_lyrics
+                FROM songs
+                WHERE song_id = %s
                 """
-                cursor.execute(query, (artist_name, song_name))
+                cursor.execute(query, (song_id))
                 result = cursor.fetchone()
                 return result[0] if result else None
         except MySQLError as e:
@@ -67,18 +66,17 @@ class TranslationsDB(BaseDB):
         finally:
             connection.close()
 
-    def get_phonetics(self, artist_name, song_name):
+    def get_phonetics(self, song_id):
         """로마자 발음 조회"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 query = """
-                SELECT s.phonetics_lyrics
-                FROM songs s
-                JOIN artists a ON s.artist_id = a.artist_id
-                WHERE a.artist_name = %s AND s.song_name = %s
+                SELECT phonetics_lyrics
+                FROM songs 
+                WHERE song_id = %s
                 """
-                cursor.execute(query, (artist_name, song_name))
+                cursor.execute(query, (song_id))
                 result = cursor.fetchone()
                 return result[0] if result else None
         except MySQLError as e:
@@ -87,18 +85,17 @@ class TranslationsDB(BaseDB):
         finally:
             connection.close()
 
-    def get_korean_phonetics(self, artist_name, song_name):
+    def get_korean_phonetics(self, song_id):
         """한국어 발음 조회"""
         connection = self._get_connection()
         try:
             with connection.cursor() as cursor:
                 query = """
-                SELECT s.korean_phonetics_lyrics
-                FROM songs s
-                JOIN artists a ON s.artist_id = a.artist_id
-                WHERE a.artist_name = %s AND s.song_name = %s
+                SELECT korean_phonetics_lyrics
+                FROM songs 
+                WHERE song_id = %s
                 """
-                cursor.execute(query, (artist_name, song_name))
+                cursor.execute(query, (song_id))
                 result = cursor.fetchone()
                 return result[0] if result else None
         except MySQLError as e:

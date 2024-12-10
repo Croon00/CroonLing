@@ -60,7 +60,7 @@ class LyricsDB(BaseDB):
         finally:
             connection.close()
 
-    def get_lyrics(self, artist_name, song_name):
+    def get_lyrics(self, song_id):
         """
         곡의 가사를 조회
         :param artist_name: 가수 이름
@@ -74,10 +74,9 @@ class LyricsDB(BaseDB):
                     """
                     SELECT lyrics
                     FROM songs s
-                    JOIN artists a ON s.artist_id = a.artist_id
-                    WHERE a.artist_name = %s AND s.song_name = %s
+                    WHERE song_id = %s
                     """,
-                    (artist_name, song_name),
+                    (song_id),
                 )
                 result = cursor.fetchone()
                 return result[0] if result else None
