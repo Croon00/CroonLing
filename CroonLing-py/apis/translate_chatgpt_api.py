@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import openai
 import json
-import openai.error
 from .api_interface import APIInterface
 from config_loader import load_config
 
