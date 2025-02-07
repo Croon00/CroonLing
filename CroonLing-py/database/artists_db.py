@@ -4,11 +4,15 @@ class ArtistsDB:
     def __init__(self):
         self.collection = mongo_db["artists"]
 
-    def get_artist(self, artist_id):
-        """아티스트 저장 여부 확인"""
+    def find_artist_id(self, artist_id):
+        """아티스트 조회"""
         return self.collection.find_one({"artist_id": artist_id}) is not None
 
-    def insert_artist_name(self, artist_id, artist_name):
-        """아티스트 이름 삽입"""
-        if not self.get_artist(artist_id):
-            self.collection.insert_one({"artist_id": artist_id, "artist_name": artist_name})
+    def upsert_artist(self, artist_id, artist_name):
+        """아티스트 삽입"""
+        self.collection.update_one(
+            {"artist_id": artist_id},
+            {"$set":{"artist_name": artist_name}}, # 없는 경우 삽입
+            upsert=True
+        )
+    

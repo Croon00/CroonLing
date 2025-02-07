@@ -3,7 +3,7 @@ from discord.ui import Button, View
 import discord
 
 
-class TranslateLyricsCommands:
+class GetTranslation:
     def __init__(self, bot):
         self.bot = bot
 

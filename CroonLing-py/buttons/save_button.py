@@ -1,7 +1,7 @@
 import discord
 from discord.ui import Button
-from service.get_info_handler import GetInfoHandler
-from service.save_song_handler import SaveHandler
+from service.get_info_service import GetInfoHandler
+from service.save_song_service import SaveHandler
 
 
 class SaveButton(Button):

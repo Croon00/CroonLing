@@ -2,6 +2,14 @@ import discord
 from discord.ui import Button
 
 class EndButton(Button):
+    """ 명령 끝내는 버튼
+
+    Args:
+        Button (_type_): _description_
+        author_id (str): 사용자 고유 ID
+        active_users: 사용자 상태
+        
+    """
     def __init__(self, author_id, active_users):
         super().__init__(label="끝내기", style=discord.ButtonStyle.danger)
         self.author_id = author_id

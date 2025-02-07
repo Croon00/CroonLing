@@ -1,25 +1,16 @@
 from database.mongodb import mongo_db
 
-class SongsDB:
+class LyricsDB:
     def __init__(self):
-        self.collection = mongo_db["songs"]
+        self.collection = mongo_db["lyrics"]
 
-    def insert_song(self, track):
-        """곡 정보를 삽입"""
-        if not self.is_song_saved(track["artist_id"], track["song_name"]):
-            self.collection.insert_one({
-                "song_id": track["song_id"],
-                "artist_id": track["artist_id"],
-                "song_name": track["song_name"],
-                "release_date": track.get("release_date"),
-                "track_image_url": track.get("track_image_url"),
-                "album_name": track.get("album_name"),
-            })
+    def find_lyrics_id(self, song_id):
+        """곡 가사 저장 여부 확인"""
+        return self.collection.find_one({"song_id": song_id}) is not None
 
-    def is_song_saved(self, artist_id, song_name):
-        """곡 저장 여부 확인"""
-        return self.collection.find_one({"artist_id": artist_id, "song_name": song_name}) is not None
-
-    def get_song_info(self, artist_name, song_name):
-        """곡 정보 조회"""
-        return self.collection.find_one({"artist_name": artist_name, "song_name": song_name})
+    def upsert_lyrics(self, song_id, lyrics):
+        self.collection.update_one(
+            {"song_id": song_id},
+            {"$set":{"lyrics": lyrics}},
+            upsert=True
+        )

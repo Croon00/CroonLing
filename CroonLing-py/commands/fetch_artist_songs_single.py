@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from apis.spotify_api import SpotifyAPI
 
-class GetSpotifySinglesCommands:
+class FetchArtistSongsSingle:
     def __init__(self, bot):
         self.bot = bot
         self.spotify_api = SpotifyAPI()

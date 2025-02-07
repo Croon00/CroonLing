@@ -2,8 +2,8 @@ import discord
 from discord.ui import Button, View
 from service import GetInfoHandler, GetPhoneticsHandler
 from apis.translate_chatgpt_api import Translator
-from service.save_phonetics_handler import SavePhoneticsHandler
-from service.get_lyrics_handler import GetLyricsHandler
+from service.save_phonetics_service import SavePhoneticsHandler
+from service.get_lyrics_service import GetLyricsHandler
 
 class PhoneticsButton(Button):
     def __init__(self, track):

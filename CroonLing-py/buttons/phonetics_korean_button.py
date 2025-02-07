@@ -2,9 +2,9 @@ import discord
 from discord.ui import Button, View
 from service import GetInfoHandler, GetPhoneticsHandler, GetKoreanPhoneticsHandler
 from apis.translate_chatgpt_api import Translator
-from service.save_korean_phonetics_handler import SaveKoreanPhoneticsHandler
+from service.save_korean_phonetics_service import SaveKoreanPhoneticsHandler
 
-class KoreanPhoneticsButton(Button):
+class PhoneticsKoreanButton(Button):
     def __init__(self, track):
         super().__init__(label="한국발음", style=discord.ButtonStyle.primary)
         self.info_handler = GetInfoHandler()

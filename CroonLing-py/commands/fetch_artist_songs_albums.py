@@ -12,7 +12,7 @@ from buttons import (
     EndButton,
 )
 
-class GetSpotifyArtistAlbumsCommands:
+class FetchArtistSongsAlbums:
     def __init__(self, bot):
         self.bot = bot
         self.spotify_api = SpotifyAPI()

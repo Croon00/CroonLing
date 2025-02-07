@@ -5,7 +5,7 @@ from config_loader import load_config
 # config.json 파일에서 DB 설정 정보 불러오기
 config = load_config()
 
-class GetLyricsCommand:
+class GetLyrics:
     def __init__(self, bot, genius_api, genius_crawler, translator):
         self.bot = bot
         self.genius_api = genius_api

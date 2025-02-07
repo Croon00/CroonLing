@@ -1,19 +1,17 @@
-from .get_lyrics import GetLyricsCommand
-from .phonetics_lyrics import PhoneticsLyricsCommand
-from .translate_lyrics import TranslateLyricsCommands
-from .phonetics_korean import GetKoreanLyricsCommand
-from .get_artist_songs_albums import GetSpotifyArtistAlbumsCommands
-from .get_artist_songs_single import GetSpotifySinglesCommands
-from .get_artist_songs_total import GetSpotifyAllTracksCommands
+from .get_lyrics import GetLyrics
+from .get_phonetics import GetPhonetics
+from .get_translation import GetTranslation
+from .get_phonetics_korean import GetPhoneticsKorean
+from .fetch_artist_songs_albums import FetchArtistSongsAlbums
+from .fetch_artist_songs_single import FetchArtistSongsSingle
+from .fetch_artist_songs_total import FetchArtistSongsTotal
 
 __all__ = [
     "GetLyricsCommand",
-    "PhoneticsLyricsCommand",
-    "TranslateLyricsCommands",
-    "GetKoreanLyricsCommand",
-    "GetArtistSongsCommand",
-    "GetSpotifyArtistAlbumsCommands",
-    "GetSpotifySinglesCommands",
-    "GetSpotifyAllTracksCommands",
-    "GetSpotifyArtistCommands",
+    "GetPhoneticsCommand",
+    "GetTranslationCommands",
+    "GetPhoneticsKoreanCommand",
+    "FetchArtistSongsAlbums",
+    "FetchArtistSongsSingle",
+    "FetchArtistSongsTotal",
 ]

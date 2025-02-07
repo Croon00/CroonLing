@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 
 
-class ArtistNameInputCommand(commands.Cog):
+class AddArtistNameKr(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='가수이름입력')
-    async def input_artist_name(self, ctx, *, artist_name: str):
+    async def add_artist_name(self, ctx, *, artist_name: str):
         """
         !!가수이름입력 (가수이름)
         - DB에서 가수 이름을 확인한 후, 한국어 이름을 입력받아 저장합니다.

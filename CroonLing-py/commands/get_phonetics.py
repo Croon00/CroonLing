@@ -4,7 +4,7 @@ from apis.translate_chatgpt_api import Translator
 from discord.ui import Button, View
 
 
-class PhoneticsLyricsCommand:
+class GetPhonetics:
     def __init__(self, bot):
         self.bot = bot
         self.translator = Translator()

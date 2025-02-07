@@ -4,7 +4,15 @@ from service import GetInfoHandler
 import requests
 import re
 
+
+
 class InfoButton(Button):
+    """ 곡의 정보 버튼
+
+    Args:
+        Button (_type_): _description_
+        track (string): 해당 트랙(곡) 정보
+    """
     def __init__(self, track):
         super().__init__(label="정보", style=discord.ButtonStyle.primary)
         self.info_handler = GetInfoHandler()

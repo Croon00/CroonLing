@@ -1,8 +1,8 @@
 import discord
 from discord.ui import Button, View
-from service.get_info_handler import GetInfoHandler
+from service.get_info_service import GetInfoHandler
 from service.save_lyrics import SaveLyricsService
-from service.get_lyrics_handler import GetLyricsHandler
+from service.get_lyrics_service import GetLyricsHandler
 
 class LyricsButton(Button):
     def __init__(self, track):

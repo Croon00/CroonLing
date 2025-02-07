@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 
 
-class SongNameInputCommand(commands.Cog):
+class AddSongNameKr(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='곡이름입력')
-    async def input_song_name(self, ctx, *, query: str):
+    async def add_song_name(self, ctx, *, query: str):
         """
         !!곡이름입력 (가수이름), (노래제목)
         - DB에서 가수 이름과 노래 제목으로 곡을 찾은 후, 한국어 곡 이름을 입력받아 저장합니다.
