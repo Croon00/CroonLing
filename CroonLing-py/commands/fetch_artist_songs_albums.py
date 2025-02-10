@@ -1,16 +1,8 @@
 import discord
 from discord.ext import commands
 from discord.ui import View
-from apis.spotify_api import SpotifyAPI
-from buttons import (
-    SaveButton,
-    InfoButton,
-    LyricsButton,
-    TranslationButton,
-    PhoneticsButton,
-    KoreanPhoneticsButton,
-    EndButton,
-)
+from apis import SpotifyAPI
+from buttons import *
 
 class FetchArtistSongsAlbums:
     def __init__(self, bot):
@@ -141,7 +133,7 @@ class FetchArtistSongsAlbums:
                 view.add_item(LyricsButton(selected_track))
                 view.add_item(TranslationButton(selected_track))
                 view.add_item(PhoneticsButton(selected_track))
-                view.add_item(KoreanPhoneticsButton(selected_track))
+                view.add_item(PhoneticsKoreanButton(selected_track))
 
                 # 끝내기 버튼 추가
                 view.add_item(EndButton(ctx.author.id, self.active_users))

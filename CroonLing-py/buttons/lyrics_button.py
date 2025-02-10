@@ -1,27 +1,30 @@
 import discord
 from discord.ui import Button, View
-from service.get_info_service import GetInfoHandler
-from service.save_lyrics import SaveLyricsService
-from service.get_lyrics_service import GetLyricsHandler
+from service import LyricsService, SongService
 
 class LyricsButton(Button):
     def __init__(self, track):
         super().__init__(label="가사", style=discord.ButtonStyle.primary)
-        self.get_info_handler = GetInfoHandler()
-        self.get_lyrics_handler = GetLyricsHandler()
-        self.save_lyrics_service = SaveLyricsService()
+        self.song_service = SongService()
+        self.lyrics_service = LyricsService()
         self.track = track
 
     async def callback(self, interaction):
-        song_info = self.get_info_handler.get_song_info(self.track['artist_name'], self.track['song_name'])
+        await interaction.response.defer()
+
+        song_info = self.song_service.get_song_info(self.track['artist_name'], self.track['song_name'])
         if not song_info:
-            await interaction.response.send_message("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
+            await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
-        lyrics = self.get_lyrics_handler.get_lyrics(self.track['song_id'])
+        lyrics = self.lyrics_service.get_lyrics(self.track['song_id'])
         if not lyrics:
-            await interaction.response.send_message(f"'{self.track['song_name']}'의 가사를 찾을 수 없어 구글에서 검색합니다...")
-            lyrics = self.save_lyrics_service.fetch_and_save_lyrics(self.track['artist_name'], self.track['song_name'])
+            await interaction.followup.send(f"'{self.track['song_name']}'의 가사를 찾을 수 없어 구글에서 검색합니다...")
+            lyrics = self.lyrics_service.fetch_and_save_lyrics(
+                self.track['song_id'],  # ✅ `song_id`를 추가로 전달
+                self.track['artist_name'],
+                self.track['song_name']
+            )
             if not lyrics:
                 await interaction.followup.send(f"'{self.track['song_name']}'의 가사를 구글에서도 찾을 수 없습니다.")
                 return
@@ -41,4 +44,4 @@ class LyricsButton(Button):
         delete_button.callback = delete_callback
         view.add_item(delete_button)
 
-        await interaction.response.send_message(embed=embed, view=view)
+        await interaction.followup.send(embed=embed, view=view)
