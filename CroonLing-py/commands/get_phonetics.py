@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from apis.translate_chatgpt_api import Translator
+from apis import Translator
 from discord.ui import Button, View
 
 

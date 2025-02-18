@@ -6,7 +6,7 @@ from service import SongService
 class SaveButton(Button):
     def __init__(self, track):
         super().__init__(label="저장", style=discord.ButtonStyle.primary)
-        self.song_service = SongService()  # GetInfoHandler를 사용
+        self.song_service = SongService()
         self.track = track
 
     async def callback(self, interaction):

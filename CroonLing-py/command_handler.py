@@ -1,10 +1,10 @@
 from commands import (
-    PhoneticsLyricsCommand,
-    TranslateLyricsCommands,
-    GetKoreanLyricsCommand,
-    GetSpotifyAllTracksCommands,
-    GetSpotifyArtistAlbumsCommands,
-    GetSpotifySinglesCommands,
+    AddArtistNameKr,
+    AddSongNameKr,
+    FetchArtistSongsAlbums,
+    FetchArtistSongsSingle,
+    FetchArtistSongsTotal,
+    FetchSingleSong
 )
 
 class CommandHandler:
@@ -12,21 +12,21 @@ class CommandHandler:
         self.bot = bot
 
         # 명령어 인스턴스 생성 및 등록
-        self.phonetics_lyrics_command = PhoneticsLyricsCommand(bot)
+        self.phonetics_lyrics_command = AddArtistNameKr(bot)
         self.phonetics_lyrics_command.register()
 
-        self.translate_lyrics_command = TranslateLyricsCommands(bot)
+        self.translate_lyrics_command = AddSongNameKr(bot)
         self.translate_lyrics_command.register()
 
-        self.get_korean_lyrics_command = GetKoreanLyricsCommand(bot)
+        self.get_korean_lyrics_command = FetchArtistSongsAlbums(bot)
         self.get_korean_lyrics_command.register()
 
-        self.get_spotify_all_tracks_command = GetSpotifyAllTracksCommands(bot)
+        self.get_spotify_all_tracks_command = FetchArtistSongsSingle(bot)
         self.get_spotify_all_tracks_command.register()
 
-        self.get_spotify_artist_albums_command = GetSpotifyArtistAlbumsCommands(bot)
+        self.get_spotify_artist_albums_command = FetchArtistSongsTotal(bot)
         self.get_spotify_artist_albums_command.register()
 
-        self.get_spotify_singles_command = GetSpotifySinglesCommands(bot)
+        self.get_spotify_singles_command = FetchSingleSong(bot)
         self.get_spotify_singles_command.register()
 

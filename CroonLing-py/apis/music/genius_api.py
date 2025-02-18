@@ -1,5 +1,5 @@
 import httpx
-from .api_interface import APIInterface
+from apis import APIInterface
 from config_loader import load_config
 
 class GeniusAPI(APIInterface):

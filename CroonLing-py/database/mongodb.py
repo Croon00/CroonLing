@@ -1,7 +1,9 @@
 from pymongo import MongoClient
-import os
+from config_loader import load_config
 
-# MongoDB 연결 설정
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
-client = MongoClient(MONGO_URI)
-mongo_db = client["croonling_db"]  # 데이터베이스 이름 설정
+# ✅ MongoDB Atlas 연결
+config = load_config()
+client = MongoClient(config.get('MONGO_URI'))
+mongo_db = client["croonling_db"]
+
+print("✅ MongoDB Atlas 연결 성공!")

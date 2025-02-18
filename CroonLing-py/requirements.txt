@@ -1,0 +1,18 @@
+# Discord 봇 관련 패키지
+discord.py
+pydantic
+typing-extensions
+
+# MongoDB 연결
+pymongo
+
+# API 요청 및 웹 크롤링 관련 패키지
+requests
+httpx
+beautifulsoup4
+
+# Selenium (웹 스크래핑 시 필요)
+selenium
+
+# OpenAI API 관련 패키지
+openai

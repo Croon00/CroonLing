@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import openai
 import json
-from .api_interface import APIInterface
+from apis import APIInterface
 from config_loader import load_config
 
 # config.json 파일에서 DB 설정 정보 불러오기
