@@ -21,7 +21,7 @@ class FetchSingleSong(commands.Cog):
             return
 
         # 1️⃣ **DB에서 곡 정보 검색**
-        song_data = self.song_service.get_song_info(artist_name, song_name)
+        song_data = self.song_service.get_song_info_by_artist_name(artist_name, song_name)
 
         if song_data:
             # 2️⃣ **DB에서 찾은 경우**
@@ -84,5 +84,5 @@ class FetchSingleSong(commands.Cog):
 
             await ctx.send("해당 곡을 데이터베이스에 저장하려면 '저장' 버튼을 눌러주세요.", view=view)
 
-def setup(bot):
-    bot.add_cog(FetchSingleSong(bot))
+async def setup(bot):
+    await bot.add_cog(FetchSingleSong(bot))

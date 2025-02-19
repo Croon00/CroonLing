@@ -56,5 +56,5 @@ class AddSongNameKr(commands.Cog):
 
 
 # Cog 추가 함수
-def setup(bot):
-    bot.add_cog(SongNameInputCommand(bot))
+async def setup(bot):
+    await bot.add_cog(AddSongNameKr(bot))

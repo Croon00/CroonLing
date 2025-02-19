@@ -14,7 +14,7 @@ class TranslationButton(Button):
         await interaction.response.defer()
 
         # 곡이 DB에 저장되어 있는지 확인
-        song_info = self.lyrics_service.get_song_info(self.track['artist_name'], self.track['song_name'])
+        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return

@@ -91,3 +91,7 @@ class FetchArtistSongsTotal(commands.Cog):
             await ctx.send(f"오류 발생: {str(e)}")
         finally:
             self.active_users.discard(ctx.author.id)
+
+# ✅ Cog 추가 함수
+async def setup(bot):
+    await bot.add_cog(FetchArtistSongsTotal(bot))

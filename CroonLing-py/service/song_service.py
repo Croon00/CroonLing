@@ -7,22 +7,42 @@ class SongService:
         self.songs_db = SongsDB()
         self.artists_db = ArtistsDB()  # 아티스트 저장을 위한 DB 연결 추가
 
-    def get_song_info(self, artist_name, song_name):
+    def get_song_info(self, artist_id, song_name):
         """
         특정 곡의 정보 가져오기
         """
-        song_info = self.songs_db.find_song_by_artist(artist_name, song_name)
+        song_info = self.songs_db.find_song_by_artist_id(artist_id, song_name)
+
         if song_info:
+            print("[DEBUG] 곡 정보 조회 성공")
+
+            # ✅ 리스트에서 첫 번째 값 가져오기 (없을 경우 기본값 설정)
+            primary_song_name = song_info.get("song_names", [None])[0]  # song_names 리스트에서 첫 번째 값
+            primary_artist_name = song_info.get("artist_names", [None])[0]  # artist_names 리스트에서 첫 번째 값
+
             return {
-                "song_name": song_info["song_name"],
-                "artist_name": song_info["artist_name"],
+                "song_name": primary_song_name if primary_song_name else song_name,
+                "artist_name": primary_artist_name,
                 "album_name": song_info.get("album_name"),
                 "track_image_url": song_info.get("track_image_url"),
                 "release_date": song_info.get("release_date"),
             }
+        else:
+            print("[DEBUG] 곡 정보 없음")
+            return None
+    
+    
+    def get_song_info_by_artist_name(self, artist_name, song_name):
+        """
+        특정 곡의 정보 가져오기
+        """
+        song_info = self.songs_db.find_song_by_artist_name(artist_name, song_name)
+        if song_info:
+            return song_info
         return None
 
     def save_track(self, track):
+        print("저장 로직")
         """
         곡을 DB에 저장 (아티스트도 함께 저장)
         """
@@ -30,11 +50,13 @@ class SongService:
         artist_name = track["artist_name"]
 
         # 아티스트 저장 여부 확인 및 저장
-        if not self.artists_db.find_artist_id(artist_id):
+        if not self.artists_db.find_artist_by_id(artist_id):
+            print("저장 되지 않아서 시작")
             self.artists_db.upsert_artist(artist_id, artist_name)
 
         # 곡 저장 여부 확인 후 저장
-        if not self.songs_db.find_song_by_artist(track["artist_name"], track["song_name"]):
+        if not self.songs_db.find_song_by_artist_id(track["artist_id"], track["song_name"]):
+            print("곡 저장")
             self.songs_db.upsert_song(track)
 
     def fetch_youtube_url(self, artist_name, song_name):

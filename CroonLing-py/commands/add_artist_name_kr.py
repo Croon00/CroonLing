@@ -44,5 +44,5 @@ class AddArtistNameKr(commands.Cog):
             await ctx.send(f"가수 이름을 처리하는 중 오류가 발생했습니다: {str(e)}")
 
 # ✅ Cog 추가 함수
-def setup(bot):
-    bot.add_cog(AddArtistNameKr(bot))
+async def setup(bot):
+    await bot.add_cog(AddArtistNameKr(bot))

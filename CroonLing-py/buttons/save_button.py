@@ -18,8 +18,9 @@ class SaveButton(Button):
 
         # 곡 정보가 DB에 저장되어 있는지 확인
         song_info = self.song_service.get_song_info(
-            self.track['artist_name'], self.track['song_name']
+            self.track['artist_id'], self.track['song_name']
         )
+        print(song_info)
 
         if song_info:
             # 곡 정보가 이미 있는 경우
@@ -27,4 +28,5 @@ class SaveButton(Button):
         else:
             # 저장 로직 수행
             self.song_service.save_track(self.track)
+            print("곡 저장 완료")
             await saving_message.edit(content="저장 완료!")

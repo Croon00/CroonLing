@@ -12,7 +12,8 @@ class InfoButton(Button):
 
     async def callback(self, interaction):
         """버튼 클릭 시 곡 정보를 조회하여 메시지로 전송"""
-        info = self.song_service.get_song_info(self.track['artist_name'], self.track['song_name'])
+        info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        print(info)
         youtube_url = self.song_service.fetch_youtube_url(self.track['artist_name'], self.track['song_name'])  # ✅ 서비스에서 가져옴
 
         embed = discord.Embed(

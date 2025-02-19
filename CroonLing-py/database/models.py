@@ -5,8 +5,7 @@ from database.mongodb import mongo_db  # MongoDB 연결 설정 가져오기
 # ✅ 아티스트 모델 (artists 컬렉션)
 class ArtistModel(BaseModel):
     artist_id: str = Field(..., description="Spotify Artist ID")
-    artist_name: str = Field(..., description="Artist Name")
-    artist_kr: List[str] = Field(default=[], description="List of Korean Names")
+    artist_names: List[str] = Field(default=[], description="List of Artist Names (English, Korean, etc.)")
 
     @staticmethod
     def get_collection():
@@ -15,11 +14,9 @@ class ArtistModel(BaseModel):
 # ✅ 곡 모델 (songs 컬렉션)
 class SongModel(BaseModel):
     song_id: str = Field(..., description="Spotify Song ID")
-    song_name: str = Field(..., description="Song Name")
+    song_names: List[str] = Field(default=[], description="List of Song Names (English, Korean, etc.)")
     artist_id: str = Field(..., description="Reference to Artist ID")
-    artist_name: str = Field(..., description="Artist Name")
-    artist_kr: List[str] = Field(default=[], description="List of Korean Names")
-    korean_song_names: List[str] = Field(default=[], description="List of Korean Song Names")
+    artist_names: List[str] = Field(default=[], description="List of Artist Names (English, Korean, etc.)")
     album_name: Optional[str] = Field(None, description="Album Name")
     release_date: Optional[str] = Field(None, description="Release Date")
     track_image_url: Optional[str] = Field(None, description="Track Image URL")
