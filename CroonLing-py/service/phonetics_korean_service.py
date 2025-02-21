@@ -1,12 +1,12 @@
 from database.songs_db import SongsDB
 from service.phonetics_service import PhoneticsService
-from apis import Translator
+from apis import ChatgptApi
 
 class PhoneticsKoreanService:
     def __init__(self):
         self.songs_db = SongsDB()
         self.phonetics_service = PhoneticsService()
-        self.translator = Translator()
+        self.translator = ChatgptApi()
 
     def get_korean_phonetics(self, song_id):
         """곡의 한글 발음 가져오기"""

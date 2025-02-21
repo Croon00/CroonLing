@@ -1,11 +1,11 @@
 from database.songs_db import SongsDB
-from apis import Translator
+from apis import ChatgptApi
 from service.lyrics_service import LyricsService
 
 class PhoneticsService:
     def __init__(self):
         self.songs_db = SongsDB()
-        self.translator = Translator()
+        self.translator = ChatgptApi()
         self.lyrics_service = LyricsService()
 
     def get_phonetics(self, song_id):

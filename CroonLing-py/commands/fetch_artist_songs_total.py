@@ -2,8 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ui import View
 from service.spotify_service import SpotifyService
-from buttons import SaveButton, InfoButton, LyricsButton, TranslationButton, PhoneticsButton, PhoneticsKoreanButton, EndButton
-
+from buttons import *
 class FetchArtistSongsTotal(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -79,6 +78,7 @@ class FetchArtistSongsTotal(commands.Cog):
             view.add_item(TranslationButton(selected_song))
             view.add_item(PhoneticsButton(selected_song))
             view.add_item(PhoneticsKoreanButton(selected_song))
+            view.add_item(KanjiButton(selected_song))
             view.add_item(EndButton(ctx.author.id, self.active_users))
 
             # Spotify 재생 버튼 추가

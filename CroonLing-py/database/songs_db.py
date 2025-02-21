@@ -9,7 +9,6 @@ class SongsDB:
     def upsert_song(self, track):
         """곡 정보 삽입 또는 업데이트 (여러 이름 저장)"""
         try:
-            print(f"[DEBUG] 업서트 실행 - song_id: {track['song_id']}")
 
             # ✅ 기존 곡 데이터 조회
             existing_song = self.collection.find_one({"song_id": track["song_id"]})
@@ -32,7 +31,6 @@ class SongsDB:
             if new_artist_name not in artist_names:
                 artist_names.append(new_artist_name)
 
-            print("[DEBUG] 업데이트 실행 전")
 
             # ✅ MongoDB 업데이트 쿼리 준비
             update_query = {
@@ -56,7 +54,6 @@ class SongsDB:
                     "phonetics_korean_lyrics": None
                 }
 
-            print("[DEBUG] 업데이트 실행 중...")
             
             # ✅ MongoDB에 업데이트 수행 (없으면 삽입)
             result = self.collection.update_one(
@@ -65,7 +62,6 @@ class SongsDB:
                 upsert=True
             )
 
-            print("[DEBUG] MongoDB 업데이트 수행 완료")
 
             # ✅ 업데이트 결과 출력
             if result.matched_count > 0:
@@ -114,6 +110,14 @@ class SongsDB:
             {"$set": {"phonetics_korean_lyrics": phonetics_korean}},
             upsert=True
         )
+    
+    def upsert_kanji_info(self, song_id, kanji_info):
+        """한국어 발음 데이터 삽입 또는 업데이트"""
+        self.collection.update_one(
+            {"song_id": song_id},
+            {"$set": {"kanji_info": kanji_info}},
+            upsert=True
+        )
 
     def insert_song_name(self, song_id, song_name):
         """곡에 새로운 이름 추가 (한국어 또는 기타 언어 포함)"""
@@ -152,3 +156,8 @@ class SongsDB:
         """번역된 가사 조회"""
         song = self.collection.find_one({"song_id": song_id}, {"translated_lyrics": 1})
         return song["translated_lyrics"] if song and "translated_lyrics" in song else None
+
+    def find_kanji_info(self, song_id):
+        """곡의 한자 정보 조회"""
+        song = self.collection.find_one({"song_id" : song_id}, {"kanji_info": 1})
+        return song["kanji_info"] if song and "kanji_info" in song else None

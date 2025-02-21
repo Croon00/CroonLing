@@ -3,8 +3,7 @@ from discord.ext import commands
 from discord.ui import View
 from service.spotify_service import SpotifyService
 from service.song_service import SongService
-from buttons import SaveButton, InfoButton, LyricsButton, TranslationButton, PhoneticsButton, PhoneticsKoreanButton, EndButton
-
+from buttons import *
 class FetchSingleSong(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -42,6 +41,7 @@ class FetchSingleSong(commands.Cog):
             view.add_item(TranslationButton(song_data))
             view.add_item(PhoneticsButton(song_data))
             view.add_item(PhoneticsKoreanButton(song_data))
+            view.add_item(KanjiButton(song_data))
             view.add_item(EndButton(ctx.author.id, set()))
 
             # Spotify URL이 있다면 추가

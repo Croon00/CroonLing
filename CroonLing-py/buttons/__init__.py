@@ -5,6 +5,7 @@ from .translation_button import TranslationButton
 from .phonetics_button import PhoneticsButton
 from .phonetics_korean_button import PhoneticsKoreanButton
 from .end_button import EndButton
+from .kanji_button import KanjiButton
 # from .song_name_button import SongNameButton
 
 __all__ = [
@@ -15,5 +16,6 @@ __all__ = [
     "PhoneticsButton",
     "PhoneticsKoreanButton",
     "EndButton",
+    "KanjiButton"
 ]
 

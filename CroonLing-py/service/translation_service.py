@@ -1,10 +1,10 @@
 from database.songs_db import SongsDB
-from apis import Translator
+from apis import ChatgptApi
 
 class TranslationService:
     def __init__(self):
         self.songs_db = SongsDB()
-        self.translator = Translator()
+        self.translator = ChatgptApi()
 
     def get_translated_lyrics(self, song_id):
         """번역된 가사 가져오기"""
