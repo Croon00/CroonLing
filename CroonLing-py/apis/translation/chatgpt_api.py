@@ -117,7 +117,6 @@ class ChatgptApi(APIInterface):
             - 한국어 뜻
             - 한국식 한자음(훈음/음독)
             - 동사인지 명사인지 구분 후 설명
-            - 합성어인 경우 각 한자의 뜻과 합성어 전체 의미 설명
 
             한자 리스트: {', '.join(kanji_list)}
 
