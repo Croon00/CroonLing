@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
+from webdriver_manager.chrome import ChromeDriverManager  # ✅ 자동 크롬 드라이버 설치
 from database.songs_db import SongsDB
 
 class LyricsService:
@@ -30,29 +31,23 @@ class LyricsService:
         search_url = f"https://www.google.com/search?q={search_query.replace(' ', '+')}"
         print(f"[DEBUG] 검색 URL: {search_url}")
 
-        # ✅ Chrome 옵션 설정 (자동화 탐지 우회 포함)
+        # ✅ Chrome 옵션 설정
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # 창 없이 실행
+        chrome_options.add_argument("--headless")  # GUI 없이 실행
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36")
-        
+
         # ✅ 자동화 탐지 방지 옵션 추가
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option("useAutomationExtension", False)
 
-        # ✅ 절대경로로 chromedriver 설정
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 프로젝트 루트
-        CHROMEDRIVER_PATH = os.path.join(BASE_DIR, "drivers", "chromedriver.exe")
-
-        print(f"[DEBUG] ChromeDriver 절대경로: {CHROMEDRIVER_PATH}")
-
         driver = None
         try:
             print("[DEBUG] Chrome WebDriver 실행 중...")
-            service = Service(CHROMEDRIVER_PATH)
+            service = Service(ChromeDriverManager().install())  # ✅ 최신 ChromeDriver 자동 다운로드
             driver = webdriver.Chrome(service=service, options=chrome_options)
 
             driver.get(search_url)

@@ -18,10 +18,7 @@ class TranslationService:
 
     def translate_lyrics(self, song_id, lyrics):
         """가사를 번역하고 저장"""
-        print("가사 번역 service 시작")
-        print(lyrics)
         translation = self.translator.translate(lyrics)
-        print("가사 번역 시작 서비스 후")
         if translation:
             self.save_translated_lyrics(song_id, translation)
             return translation

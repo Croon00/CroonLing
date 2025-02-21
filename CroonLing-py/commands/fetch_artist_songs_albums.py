@@ -13,7 +13,6 @@ class FetchArtistSongsAlbums(commands.Cog):
 
     @commands.command(name='앨범')
     async def spotify_artist_albums(self, ctx, *, artist_name: str):
-        print("앨범 시작")
         """아티스트의 앨범 목록을 보여주고 선택한 앨범의 곡 목록을 표시"""
         if ctx.author.id in self.active_users:
             await ctx.send("이미 명령어를 실행 중입니다. 완료 후 다시 시도해주세요.")

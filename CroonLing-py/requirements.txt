@@ -13,6 +13,26 @@ beautifulsoup4
 
 # Selenium (웹 스크래핑 시 필요)
 selenium
+webdriver-manager  # ✅ 자동으로 크롬드라이버 설치 및 관리
 
 # OpenAI API 관련 패키지
 openai
+
+# 환경변수 로드
+python-dotenv  # ✅ .env 파일에서 환경변수 로드
+
+# 로깅 개선 (선택 사항)
+loguru  # 강력한 로깅 라이브러리
+
+# 비동기 HTTP 요청 (선택 사항)
+aiohttp  # `requests`보다 비동기 환경에서 효율적
+
+# API 요청 재시도 (선택 사항)
+tenacity  # OpenAI API, Selenium 요청 실패 시 재시도 로직 구현 가능
+
+# 비동기 최적화 (선택 사항)
+uvloop  # asyncio 성능 향상
+
+# REST API 서버 운영 (선택 사항)
+fastapi
+gunicorn
