@@ -16,8 +16,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# 환경 변수 설정 (로그 즉시 출력)
+ENV PYTHONUNBUFFERED=1
+
 # ✅ 5️⃣ 소스 코드 복사
 COPY . .
 
 # ✅ 6️⃣ 실행할 명령어 설정
-CMD ["python", "main.py"]
+CMD ["python", "-u", "main.py"]
+
