@@ -89,28 +89,29 @@ class ChatgptApi(APIInterface):
         
         
     def extract_kanji_info(self, text):
-        """가사에서 한자를 추출하고, N3 이상의 한자만 필터링하여 반환"""
+        """가사에서 한자를 추출하고, 해당 한자의 뜻, 발음(히라가나), 한국식 한자음, 동사/합성어 여부, JLPT 급수 반환"""
 
         try:
+            # ✅ 로그 추가: 원본 텍스트 길이 확인
             logging.info(f"🔍 원본 텍스트 길이: {len(text)}")
 
             # ✅ 길이 제한 설정 (디스코드 봇 API 제한 대비)
-            MAX_TEXT_LENGTH = 4000  
+            MAX_TEXT_LENGTH = 4000  # GPT-4는 4096 토큰 제한이 있음 (안전하게 4000자로 제한)
             if len(text) > MAX_TEXT_LENGTH:
                 logging.warning(f"⚠️ 텍스트 길이가 {MAX_TEXT_LENGTH}자를 초과하여 잘라냅니다.")
-                text = text[:MAX_TEXT_LENGTH]
+                text = text[:MAX_TEXT_LENGTH]  # 초과 시 자름
 
             # ✅ 한자 추출 (디버깅용 로그 추가)
-            kanji_list = list(set(re.findall(r'[\u4E00-\u9FFF]', text)))
+            kanji_list = list(set(re.findall(r'[\u4E00-\u9FFF]', text)))  # 한자만 개별 문자 단위로 추출
             logging.info(f"🈶 추출된 한자 개수: {len(kanji_list)} | 목록: {kanji_list}")
 
             if not kanji_list:
                 logging.warning("❌ 한자가 포함되지 않은 텍스트입니다.")
                 return "해당 가사에서 한자를 찾을 수 없습니다."
 
-            # ✅ ChatGPT 프롬프트 (JLPT N3 이상의 한자만 요청)
+            # ✅ ChatGPT 프롬프트 (예문 제거)
             prompt = f"""
-            다음 한자 또는 한자 합성어에 대한 정보를 제공해 주세요. 
+             다음 한자 또는 한자 합성어에 대한 정보를 제공해 주세요. 
             단, **N3 이상의 한자만 결과에 포함해 주세요.**
             - 일본어 발음(히라가나)
             - 한국어 뜻
@@ -142,11 +143,8 @@ class ChatgptApi(APIInterface):
                     ],
                 )
                 result = response.choices[0].message.content
-
-                # ✅ JLPT 급수 정보 제거 (필요 없으므로 정리)
-                result_cleaned = re.sub(r'\s*-\s*JLPT\s*N[1-5]', '', result)
-                logging.info("✅ API 응답 성공: 한자 정보 추출 완료 (N3 이상 필터링 적용)")
-                return result_cleaned
+                logging.info("✅ API 응답 성공: 한자 정보 추출 완료")
+                return result
 
             except openai.AuthenticationError:
                 logging.error("❌ API 키 인증 오류: 키가 올바르지 않거나 만료됨")
