@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 import json
 import asyncio
+from config_loader import load_config
 from commands import __all__ as COGS  # ✅ commands/__init__.py에서 __all__ 가져오기
 
 # config.json에서 토큰 로드
-with open("config.json") as config_file:
-    config = json.load(config_file)
-    TOKEN = config['DISCORD_BOT_TOKEN']
+config = load_config()
+TOKEN = config['DISCORD_BOT_TOKEN']
 
 # Discord 봇 설정
 intents = discord.Intents.default()
