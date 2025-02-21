@@ -1,35 +1,27 @@
-from database.translations_db import TranslationsDB
-
+from database.songs_db import SongsDB
+from apis import ChatgptApi
+from service.lyrics_service import LyricsService
 
 class PhoneticsService:
     def __init__(self):
-        self.db_manager = TranslationsDB()
+        self.songs_db = SongsDB()
+        self.translator = ChatgptApi()
+        self.lyrics_service = LyricsService()
 
     def get_phonetics(self, song_id):
-        """
-        곡의 로마자 발음 가져오기
-        """
-        phonetics_lyrics = self.db_manager.get_phonetics(song_id)
-        if phonetics_lyrics:
-            return phonetics_lyrics
+        """곡의 로마자 발음 가져오기"""
+        song = self.songs_db.find_song_by_id(song_id)
+        return song.get("phonetics_lyrics") if song else None
+
+    def generate_and_save_phonetics(self, song_id):
+        """곡의 가사에서 발음을 생성하고 DB에 저장"""
+        lyrics = self.lyrics_service.get_lyrics(song_id)
+        if not lyrics:
+            return None
+
+        pronunciation = self.translator.phonetics(lyrics)
+        if pronunciation:
+            self.songs_db.upsert_phonetics(song_id, pronunciation)
+            return pronunciation
+
         return None
-
-
-
-    def save_phonetics(self, song_id: str, phonetics_lyrics: str):
-            """
-            로마자 발음을 데이터베이스에 삽입 또는 업데이트합니다.
-
-            Parameters:
-            - song_id: 곡 ID
-            - phonetics_lyrics: 로마자 발음
-            Returns:
-            - 성공 메시지 (str)
-            """
-            try:
-                # 로마자 발음 업데이트
-                self.translations_db.update_phonetics(song_id, phonetics_lyrics)
-                return f"곡 ID '{song_id}'의 로마자 발음이 성공적으로 업데이트되었습니다."
-            except Exception as e:
-                print(f"로마자 발음을 업데이트하는 중 오류 발생: {e}")
-                return f"곡 ID '{song_id}'의 로마자 발음 업데이트에 실패했습니다."

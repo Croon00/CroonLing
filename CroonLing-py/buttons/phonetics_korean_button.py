@@ -1,40 +1,31 @@
 import discord
 from discord.ui import Button, View
-from service import GetInfoHandler, GetPhoneticsHandler, GetKoreanPhoneticsHandler
-from apis.translate_chatgpt_api import Translator
-from service.save_korean_phonetics_service import SaveKoreanPhoneticsHandler
+from service import SongService, PhoneticsKoreanService
 
 class PhoneticsKoreanButton(Button):
     def __init__(self, track):
         super().__init__(label="한국발음", style=discord.ButtonStyle.primary)
-        self.info_handler = GetInfoHandler()
-        self.phonetics_handler = GetPhoneticsHandler()
-        self.korean_phonetics_handler = GetKoreanPhoneticsHandler()
-        self.translator = Translator()
-        self.save_korean_phonetics_handler = SaveKoreanPhoneticsHandler()
+        self.song_service = SongService()
+        self.phonetics_korean_service = PhoneticsKoreanService()
         self.track = track
 
     async def callback(self, interaction):
         await interaction.response.defer()
-        song_info = self.info_handler.get_song_info(self.track['artist_name'], self.track['song_name'])
+
+        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
-        korean_pronunciation = self.korean_phonetics_handler.get_korean_phonetics(self.track['song_id'])
+        korean_pronunciation = self.phonetics_korean_service.get_korean_phonetics(self.track['song_id'])
         if not korean_pronunciation:
-            roman_pronunciation = self.phonetics_handler.get_phonetics(self.track['song_id'])
-            if not roman_pronunciation:
-                await interaction.followup.send("데이터베이스에서 로마자 발음을 찾을 수 없습니다.")
-                return
+            await interaction.followup.send("데이터베이스에서 한국어 발음을 찾을 수 없습니다. 생성 중입니다. 잠시만 기다려주세요...")
 
-            await interaction.followup.send("한국 발음을 생성 중입니다. 잠시만 기다려주세요...")
-            korean_pronunciation = self.translator.roman_to_korean(roman_pronunciation)
-            if not korean_pronunciation or "오류" in korean_pronunciation:
-                await interaction.followup.send("한국 발음 생성 작업 중 오류가 발생했습니다.")
+            # ✅ 서비스에서 한국어 발음 생성 요청
+            korean_pronunciation = self.phonetics_korean_service.generate_and_save_korean_phonetics(self.track['song_id'])
+            if not korean_pronunciation:
+                await interaction.followup.send("한국 발음 생성 작업 중 오류가 발생했습니다. (발음 버튼을 먼저 안 누른 경우 발음 버튼을 먼저 누르세요)")
                 return
-
-            self.save_korean_phonetics_handler.save_korean_phonetics(self.track['song_id'], korean_pronunciation)
 
         embed = discord.Embed(
             title=f"'{self.track['song_name']}' 한국 발음",

@@ -1,43 +1,50 @@
 import discord
 from discord.ext import commands
-import json
-from apis import GeniusAPI, GeniusCrawler, Translator
-from command_handler import CommandHandler
-from database.db_initialize import initialize_db
+import asyncio
+from config_loader import load_config
+from commands import __all__ as COGS  # ✅ commands/__init__.py에서 __all__ 가져오기
+import logging
 
 
-# print("한글이 잘 나오나")
+# 로그 설정
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# config.json 파일을 읽어와서 토큰 값을 가져옵니다.
-with open("config.json") as config_file:
-    config = json.load(config_file)
-    TOKEN = config['DISCORD_BOT_TOKEN']
-    GENIUS_API_TOKEN = config['GENIUS_API_TOKEN']
-    OPEN_API_TOKEN = config['OPEN_API_TOKEN']
+logging.info("🚀 Railway 컨테이너 실행 시작!")
 
-
-# 데이터베이스 초기화
-initialize_db()  # db_initialize의 초기화 함수 실행
-
+# 기존 print()를 logging으로 변경
+logging.debug("이 메시지는 Debug 레벨")
+logging.info("이 메시지는 Info 레벨")
+logging.warning("이 메시지는 Warning 레벨")
+logging.error("이 메시지는 Error 레벨")
+logging.critical("이 메시지는 Critical 레벨")
 
 
-# Discord 봇 인스턴스 생성
+config = load_config()
+TOKEN = config['DISCORD_BOT_TOKEN']
+
+# Discord 봇 설정
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='!!', intents=intents)
+bot = commands.Bot(command_prefix="!!", intents=intents)
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="!!명령어 로 도움말 확인"))
 
-# Genius API, Genius Crawler, Translator 인스턴스 생성
-genius_api_instance = GeniusAPI()
-genius_crawler_instance = GeniusCrawler()
-translator_instance = Translator()
+# ✅ `commands/__init__.py`의 `__all__`을 이용하여 모든 Cog 자동 로드
+async def load_cogs():
+    for cog in COGS:
+        extension = f"commands.{cog}"
+        try:
+            await bot.load_extension(extension)
+            print(f"✅ Cog 로드됨: {extension}")
+        except Exception as e:
+            print(f"❌ Cog 로드 실패: {extension} | 오류: {e}")
 
-# CommandHandler 인스턴스 생성 및 명령어 등록
-command_handler = CommandHandler(bot, genius_api_instance, genius_crawler_instance, translator_instance)
+# ✅ 봇 실행
+async def main():
+    await load_cogs()  # Cog 자동 로드
+    await bot.start(TOKEN)  # 봇 시작
 
-# Discord 봇 실행
-bot.run(TOKEN)
+asyncio.run(main())  # 비동기 실행

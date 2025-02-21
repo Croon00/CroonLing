@@ -1,54 +1,81 @@
-from database.songs_db import SongsDB
-
+import requests
+import re
+from database import SongsDB, ArtistsDB
 
 class SongService:
     def __init__(self):
         self.songs_db = SongsDB()
+        self.artists_db = ArtistsDB()  # 아티스트 저장을 위한 DB 연결 추가
 
-    def get_song_info(self, artist, song):
+    def get_song_info(self, artist_id, song_name):
         """
         특정 곡의 정보 가져오기
-        :param artist: 가수 이름
-        :param song: 곡 제목
-        :return: 곡 정보 딕셔너리 또는 None
         """
-        song_info = self.songs_db.find_song_by_id(artist, song)
+        song_info = self.songs_db.find_song_by_artist_id(artist_id, song_name)
+
         if song_info:
+            print("[DEBUG] 곡 정보 조회 성공")
+
+            # ✅ 리스트에서 첫 번째 값 가져오기 (없을 경우 기본값 설정)
+            primary_song_name = song_info.get("song_names", [None])[0]  # song_names 리스트에서 첫 번째 값
+            primary_artist_name = song_info.get("artist_names", [None])[0]  # artist_names 리스트에서 첫 번째 값
+
             return {
-                "song_name": song_info["song_name"],
-                "artist_name": song_info["artist_name"],
-                "album_name": song_info.get("album_name", None),
-                "track_image_url": song_info.get("track_image_url", None),
-                "release_date": song_info.get("release_date", None),
+                "song_name": primary_song_name if primary_song_name else song_name,
+                "artist_name": primary_artist_name,
+                "album_name": song_info.get("album_name"),
+                "track_image_url": song_info.get("track_image_url"),
+                "release_date": song_info.get("release_date"),
             }
-        # 정보가 없을 경우 None 반환
-        return None
+        else:
+            print("[DEBUG] 곡 정보 없음")
+            return None
     
-    def save_track(self, track):
+    
+    def get_song_info_by_artist_name(self, artist_name, song_name):
         """
-        DB에 트랙 저장
-        Parameters:
-        - track: 트랙 정보 딕셔너리
+        특정 곡의 정보 가져오기
+        """
+        song_info = self.songs_db.find_song_by_artist_name(artist_name, song_name)
+        if song_info:
+            return song_info
+        return None
+
+    def save_track(self, track):
+        print("저장 로직")
+        """
+        곡을 DB에 저장 (아티스트도 함께 저장)
         """
         artist_id = track["artist_id"]
         artist_name = track["artist_name"]
-        
-        
-        # 아티스트 저장 여부 확인 및 저장
-        if not self.artists_db.is_artist_saved(artist_id):
-            self.artists_db.insert_artist_name(artist_id, artist_name)
-        
-        
-        # 곡 저장 여부 확인
-        if not self.songs_db.is_song_saved(artist_name, track["song_name"]):
-            self.songs_db.insert_song(
-                {
-                    "song_id": track["song_id"],
-                    "song_name": track["song_name"],
-                    "artist_id": track["artist_id"],
-                    "release_date": track.get("release_date"),
-                    "track_image_url": track.get("track_image_url"),
-                    "album_name": track.get("album_name")
-                }
-            )
 
+        # 아티스트 저장 여부 확인 및 저장
+        if not self.artists_db.find_artist_by_id(artist_id):
+            print("저장 되지 않아서 시작")
+            self.artists_db.upsert_artist(artist_id, artist_name)
+
+        # 곡 저장 여부 확인 후 저장
+        if not self.songs_db.find_song_by_artist_id(track["artist_id"], track["song_name"]):
+            print("곡 저장")
+            self.songs_db.upsert_song(track)
+
+    def fetch_youtube_url(self, artist_name, song_name):
+        """
+        YouTube에서 곡 검색 후 첫 번째 영상 URL 반환
+        """
+        query = f"{artist_name} {song_name}"
+        search_url = f"https://www.youtube.com/results?search_query={requests.utils.quote(query)}"
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+
+        try:
+            response = requests.get(search_url, headers=headers)
+            response.raise_for_status()
+            video_ids = re.findall(r"\"videoId\":\"([^\"]+)\"", response.text)
+            if video_ids:
+                return f"https://www.youtube.com/watch?v={video_ids[0]}"
+        except requests.RequestException as e:
+            print(f"YouTube 검색 중 오류 발생: {e}")
+
+        return None
