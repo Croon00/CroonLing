@@ -7,12 +7,12 @@ class KanjiService:
         self.translator = ChatgptApi()
 
     def get_kanji_info(self, song_id):
-        """번역된 가사 가져오기"""
+        """한자 정보 가져오기"""
         song = self.songs_db.find_kanji_info(song_id)
         return song.get("kanji_info") if song else None
 
     def save_kanji_info(self, song_id, kanji_info):
-        """번역된 가사를 저장"""
+        """한자 정보 저장"""
         self.songs_db.upsert_kanji_info(song_id, kanji_info)
         return f"곡 ID '{song_id}'의 번역된 가사가 성공적으로 업데이트되었습니다."
 
