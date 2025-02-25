@@ -79,6 +79,9 @@ class FetchArtistSongsTotal(commands.Cog):
             view.add_item(PhoneticsButton(selected_song))
             view.add_item(PhoneticsKoreanButton(selected_song))
             view.add_item(KanjiButton(selected_song))
+            view.add_item(PopularityButton(selected_song))
+            view.add_item(RecommendationsButton(selected_song))
+            view.add_item(RelatedArtistsButton(selected_song))
             view.add_item(EndButton(ctx.author.id, self.active_users))
 
             # Spotify 재생 버튼 추가

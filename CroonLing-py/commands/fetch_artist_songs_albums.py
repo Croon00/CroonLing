@@ -133,6 +133,9 @@ class FetchArtistSongsAlbums(commands.Cog):
             view.add_item(TranslationButton(selected_track))
             view.add_item(PhoneticsButton(selected_track))
             view.add_item(PhoneticsKoreanButton(selected_track))
+            view.add_item(PopularityButton(selected_track))
+            view.add_item(RecommendationsButton(selected_track))
+            view.add_item(RelatedArtistsButton(selected_track))
             view.add_item(KanjiButton(selected_track))
 
             # 끝내기 버튼 추가

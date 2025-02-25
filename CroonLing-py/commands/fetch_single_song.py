@@ -42,6 +42,9 @@ class FetchSingleSong(commands.Cog):
             view.add_item(PhoneticsButton(song_data))
             view.add_item(PhoneticsKoreanButton(song_data))
             view.add_item(KanjiButton(song_data))
+            view.add_item(PopularityButton(song_data))
+            view.add_item(RecommendationsButton(song_data))
+            view.add_item(RelatedArtistsButton(song_data))
             view.add_item(EndButton(ctx.author.id, set()))
 
             # Spotify URL이 있다면 추가

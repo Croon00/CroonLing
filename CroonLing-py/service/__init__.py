@@ -5,6 +5,7 @@ from .phonetics_service import PhoneticsService
 from .song_service import SongService
 from .translation_service import TranslationService
 from .kanji_service import KanjiService
+from .spotify_service import SpotifyService
 
 __all__ = [
     "ArtistsService",
@@ -13,5 +14,6 @@ __all__ = [
     "PhoneticsService",
     "SongService",
     "TranslationService",
-    "KanjiService"
+    "KanjiService",
+    "SpotifyService"
 ]
