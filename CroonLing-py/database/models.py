@@ -6,7 +6,12 @@ from database.mongodb import mongo_db  # MongoDB 연결 설정 가져오기
 class ArtistModel(BaseModel):
     artist_id: str = Field(..., description="Spotify Artist ID")
     artist_names: List[str] = Field(default=[], description="List of Artist Names (English, Korean, etc.)")
-
+    genres: List[str] = Field(default=[], description="List of artist's music genres")
+    popularity: Optional[int] = Field(None, description="Popularity score (0-100)")
+    followers: Optional[int] = Field(None, description="Number of followers on Spotify")
+    profile_image_url: Optional[str] = Field(None, description="URL of the artist's profile image")
+    external_url: Optional[str] = Field(None, description="Spotify artist profile URL")
+    
     @staticmethod
     def get_collection():
         return mongo_db["artists"]
