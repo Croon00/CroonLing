@@ -1,11 +1,13 @@
 import requests
 import re
 from database import SongsDB, ArtistsDB
+from apis import SpotifyAPI
 
 class SongService:
     def __init__(self):
         self.songs_db = SongsDB()
         self.artists_db = ArtistsDB()  # 아티스트 저장을 위한 DB 연결 추가
+        self.spotify_api = SpotifyAPI()
 
     def get_song_info(self, artist_id, song_name):
         """
@@ -42,22 +44,23 @@ class SongService:
         return None
 
     def save_track(self, track):
-        print("저장 로직")
         """
         곡을 DB에 저장 (아티스트도 함께 저장)
         """
         artist_id = track["artist_id"]
         artist_name = track["artist_name"]
 
-        # 아티스트 저장 여부 확인 및 저장
-        if not self.artists_db.find_artist_by_id(artist_id):
-            print("저장 되지 않아서 시작")
-            self.artists_db.upsert_artist(artist_id, artist_name)
+        # ✅ 아티스트 정보가 없으면 Spotify API에서 가져와 저장
+        existing_artist = self.artists_db.find_artist_by_id(artist_id)
+        if not existing_artist:
+            artist_info = self.spotify_api.get_artist_info(artist_id)  # ✅ API 호출
+            if artist_info:
+                self.artists_db.upsert_artist(artist_info)  # ✅ 가져온 정보를 저장
 
-        # 곡 저장 여부 확인 후 저장
+        # ✅ 곡 저장 여부 확인 후 저장
         if not self.songs_db.find_song_by_artist_id(track["artist_id"], track["song_name"]):
-            print("곡 저장")
             self.songs_db.upsert_song(track)
+
 
     def fetch_youtube_url(self, artist_name, song_name):
         """

@@ -48,7 +48,7 @@ class FetchArtistSongsSingle(commands.Cog):
 
             single_description = "\n".join(
                 [f"{idx + 1}. {single['name']} (발매일: {single['release_date']})"
-                 for idx, single in enumerate(single_list)]
+                for idx, single in enumerate(single_list)]
             )
 
             embed = discord.Embed(

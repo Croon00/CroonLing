@@ -46,7 +46,7 @@ class FetchArtistSongsTotal(commands.Cog):
 
             songs_description = "\n".join(
                 [f"{idx + 1}. {song['song_name']} (앨범: {song['album_name']}, 발매일: {song['release_date']})"
-                 for idx, song in enumerate(song_list)]
+                for idx, song in enumerate(song_list)]
             )
 
             embed = discord.Embed(

@@ -22,38 +22,44 @@ class ArtistsDB:
         else : 
             return None
         
-    def upsert_artist(self, artist_id, artist_name):
-        """아티스트 정보 삽입 또는 업데이트 (중복 방지 및 오류 해결)"""
+    def upsert_artist(self, artist_info):
+        """Spotify API에서 가져온 아티스트 정보 삽입 또는 업데이트"""
         try:
+            artist_id = artist_info["artist_id"]
+            artist_name = artist_info["artist_name"]
+
             print(f"[DEBUG] 업서트 실행 - artist_id: {artist_id}, artist_name: {artist_name}")
 
-            # ✅ 기존 아티스트 문서 조회
+            # ✅ 기존 아티스트 조회
             existing_artist = self.collection.find_one({"artist_id": artist_id})
 
-            # ✅ 기존 artist_names 필드가 없거나 단일 문자열이면 리스트로 변환
             if existing_artist:
-                artist_names = existing_artist.get("artist_names", [])  # 기본값 빈 리스트
+                artist_names = existing_artist.get("artist_names", [])
                 if isinstance(artist_names, str):
-                    artist_names = [artist_names]  # 단일 문자열이면 리스트 변환
+                    artist_names = [artist_names]  # 단일 문자열을 리스트로 변환
             else:
-                artist_names = []  # 신규 삽입 시 빈 리스트로 초기화
+                artist_names = []
 
-            # ✅ 업데이트 실행
+            # ✅ 업데이트 쿼리 (external_urls, uri 제외)
             update_query = {
-                "$setOnInsert": {"artist_id": artist_id},  # 처음 삽입될 때만 설정
-                "$addToSet": {"artist_names": artist_name}  # 중복되지 않도록 리스트 추가
+                "$set": {
+                    "followers": artist_info["followers"],
+                    "genres": artist_info["genres"],
+                    "images": artist_info["images"],
+                    "popularity": artist_info["popularity"]
+                },
+                "$addToSet": {"artist_names": artist_name}  # 중복되지 않도록 추가
             }
 
             print("[DEBUG] 업데이트 실행 준비 완료")
 
-            # ✅ MongoDB에 업데이트 수행 (없으면 삽입)
+            # ✅ MongoDB 업데이트 실행
             result = self.collection.update_one(
                 {"artist_id": artist_id},
                 update_query,
                 upsert=True
             )
 
-            # ✅ 업데이트 결과 출력
             if result.matched_count:
                 print(f"[DEBUG] 기존 아티스트 업데이트 완료 - artist_id: {artist_id}")
             elif result.upserted_id:

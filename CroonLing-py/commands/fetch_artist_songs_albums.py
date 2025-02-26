@@ -55,7 +55,7 @@ class FetchArtistSongsAlbums(commands.Cog):
             ]
             album_description = "\n".join(
                 [f"{idx + 1}. {album['name']} (발매일: {album['release_date']})"
-                 for idx, album in enumerate(album_list)]
+                for idx, album in enumerate(album_list)]
             )
             embed = discord.Embed(
                 title=f"{artist_name}의 앨범 목록",

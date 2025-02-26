@@ -63,3 +63,24 @@ class SpotifyAPI:
             "limit": 10
         }
         return await self.get(endpoint, params)
+    
+    async def get_artist_info(self, artist_id):
+        """
+        Spotify API에서 아티스트 정보를 가져오는 메서드
+        - artist_id: Spotify에서 조회할 아티스트의 ID (string)
+        """
+        endpoint = f"artists/{artist_id}"
+        artist_data = await self.get(endpoint)
+
+        if not artist_data:
+            return None
+
+        # ✅ 불필요한 `external_urls.spotify` 와 `uri` 필드는 제외하고 반환
+        return {
+            "artist_id": artist_data.get("id"),
+            "artist_name": artist_data.get("name"),
+            "followers": artist_data.get("followers", {}).get("total", 0),
+            "genres": artist_data.get("genres", []),
+            "images": artist_data.get("images", []),  # 여러 해상도의 이미지 리스트
+            "popularity": artist_data.get("popularity")
+        }
