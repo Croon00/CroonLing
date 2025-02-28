@@ -1,0 +1,64 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.croonling'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Security & OAuth 2.0
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// JWT (JSON Web Token)
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Jackson 기반 JSON 처리
+	implementation 'javax.xml.bind:jaxb-api:2.3.1' // 일부 JDK 환경에서 필요
+
+	// Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// 로깅 (SLF4J)
+	implementation 'org.slf4j:slf4j-api:2.0.7'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// env 파일 로드
+	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// 테스트
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
