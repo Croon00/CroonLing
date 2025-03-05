@@ -24,14 +24,28 @@ repositories {
 }
 
 dependencies {
+	// ✅ 기본적인 Spring Boot 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// ✅ Kafka 관련 의존성 추가
+	implementation 'org.springframework.kafka:spring-kafka'  // 🔹 Kafka 사용 필수
+
+	// ✅ JSON 데이터 변환 (Kafka 메시지 직렬화/역직렬화)
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// ✅ Lombok
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// ✅ MariaDB 드라이버
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+	// ✅ 테스트 관련 라이브러리
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'  // 🔹 Kafka 테스트 추가
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
