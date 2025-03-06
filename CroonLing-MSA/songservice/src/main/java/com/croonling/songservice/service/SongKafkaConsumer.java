@@ -1,7 +1,6 @@
-package com.croonling.songservice.consumer;
+package com.croonling.songservice.service;
 
 import com.croonling.songservice.dto.SongRequestDto;
-import com.croonling.songservice.service.SongService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;

@@ -13,15 +13,25 @@ import java.util.List;
 @Table(name = "songs")
 public class Song {
     @Id
+    @Column(name = "song_id", unique = true)
     private String songId;
 
     @Column(columnDefinition = "TEXT")  // 🔹 쉼표로 구분된 문자열 저장
     private String songNames;
 
+    @Column(name = "artist_id", nullable = false)
     private String artistId;
+
+    @Column(name = "album_name", nullable = true)
     private String albumName;
+
+    @Column(name = "release_date", nullable = false)
     private String releaseDate;
+
+    @Column(name = "track_image_url", nullable = true)
     private String trackImageUrl;
+
+
     private String url;
     private String lyrics;
     private String translatedLyrics;
