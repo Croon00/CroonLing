@@ -1,4 +1,5 @@
 package com.croonling.artistservice.service;
 
-public class ArtistService {
+public interface ArtistService
+{
 }

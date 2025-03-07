@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "artists")
 public class Artist {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "artist_id", unique = true)
     private Long id;
 
     @Column(unique = true, nullable = false)
