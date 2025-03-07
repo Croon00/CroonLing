@@ -3,7 +3,6 @@ package com.croonling.songservice.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -13,45 +12,56 @@ import java.util.List;
 @Table(name = "songs")
 public class Song {
     @Id
-    @Column(name = "song_id", unique = true)
+    @Column(name = "song_id", unique = true, nullable = false)
     private String songId;
 
-    @Column(columnDefinition = "TEXT")  // 🔹 쉼표로 구분된 문자열 저장
-    private String songNames;
+    @ElementCollection  // 🔹 List<String> 자동 매핑
+    @CollectionTable(name = "song_names", joinColumns = @JoinColumn(name = "song_id"))
+    @Column(name = "song_name")
+    private List<String> songNames;
 
     @Column(name = "artist_id", nullable = false)
     private String artistId;
 
-    @Column(name = "album_name", nullable = true)
+    @ElementCollection
+    @CollectionTable(name = "song_artist_names", joinColumns = @JoinColumn(name = "song_id"))
+    @Column(name = "artist_name")
+    private List<String> artistNames;
+
+    @Column(name = "album_name")
     private String albumName;
 
-    @Column(name = "release_date", nullable = false)
+    @Column(name = "release_date")
     private String releaseDate;
 
-    @Column(name = "track_image_url", nullable = true)
+    @Column(name = "track_image_url")
     private String trackImageUrl;
 
-
+    @Column(name = "url")
     private String url;
+
+    @Lob  // 🔹 긴 문자열 데이터 처리
+    @Column(name = "lyrics")
     private String lyrics;
+
+    @Lob
+    @Column(name = "translated_lyrics")
     private String translatedLyrics;
+
+    @Lob
+    @Column(name = "phonetics_lyrics")
     private String phoneticsLyrics;
+
+    @Lob
+    @Column(name = "phonetics_korean_lyrics")
     private String phoneticsKoreanLyrics;
 
-    // 🔹 `songNames`를 List<String>으로 변환하는 메서드
-    public List<String> getSongNamesList() {
-        return songNames != null ? Arrays.asList(songNames.split(",")) : null;
-    }
-
-    public void setSongNamesList(List<String> names) {
-        this.songNames = names != null ? String.join(",", names) : null;
-    }
-
     @Builder
-    public Song(String songId, String songNames, String artistId, String albumName, String releaseDate, String trackImageUrl, String url, String lyrics, String translatedLyrics, String phoneticsLyrics, String phoneticsKoreanLyrics) {
+    public Song(String songId, List<String> songNames, String artistId, List<String> artistNames, String albumName, String releaseDate, String trackImageUrl, String url, String lyrics, String translatedLyrics, String phoneticsLyrics, String phoneticsKoreanLyrics) {
         this.songId = songId;
         this.songNames = songNames;
         this.artistId = artistId;
+        this.artistNames = artistNames;
         this.albumName = albumName;
         this.releaseDate = releaseDate;
         this.trackImageUrl = trackImageUrl;
