@@ -18,7 +18,7 @@ public class UserController {
     }
 
     // OAuth 2.0 로그인 후 유저 정보 저장
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRequestDto requestDto) {
         return ResponseEntity.ok(userService.registerUser(requestDto));
     }

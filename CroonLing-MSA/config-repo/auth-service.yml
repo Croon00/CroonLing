@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   security:
     oauth2:
@@ -15,9 +18,19 @@ spring:
             user-info-uri: https://discord.com/api/users/@me
             user-name-attribute: id
 
-  redis:
-    host: localhost
-    port: 6379
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
-  secret: your-256-bit-secret-key-that-is-long-enough-please
+  secret: ${JWT_SECRET}
+  expiration: 3600000 # 1시간
+
+security:
+  csrf-disabled: true
+  public-endpoints:
+    - /auth/login
+    - /auth/callback
+  oauth2:
+    default-success-url: /auth/callback

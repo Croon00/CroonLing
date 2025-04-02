@@ -23,6 +23,12 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.4"
+	}
+}
+
 dependencies {
 	// Spring Security & OAuth 2.0
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -52,6 +58,9 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// FeignClient
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	// 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

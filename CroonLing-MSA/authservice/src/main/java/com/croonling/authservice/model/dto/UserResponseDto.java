@@ -1,8 +1,14 @@
 package com.croonling.authservice.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserResponseDto {
 
     private String userId;
@@ -10,12 +16,4 @@ public class UserResponseDto {
     private String email;
     private String accessToken;
     private String refreshToken;
-
-    public UserResponseDto(String userId, String username, String email, String accessToken, String refreshToken) {
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
 }

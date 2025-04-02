@@ -22,20 +22,20 @@ public class AuthService {
         this.redisTemplate = redisTemplate;
     }
 
-    // 로그인 후 Access Token + Refresh Token 발급
-    public Map<String, String> generateTokens(String userId) {
-        String accessToken = jwtProvider.generateAccessToken(userId);
-        String refreshToken = jwtProvider.generateRefreshToken(userId);
-
-        // Redis에 Refresh Token 저장 (7일 유지)
-        redisTemplate.opsForValue().set("refreshToken:" + userId, refreshToken, 7, TimeUnit.DAYS);
-
-        return Map.of(
-                "access_token", accessToken,
-                "refresh_token", refreshToken,
-                "token_type", "Bearer"
-        );
-    }
+//    // 로그인 후 Access Token + Refresh Token 발급
+//    public Map<String, String> generateTokens(String userId) {
+//        String accessToken = jwtProvider.generateAccessToken(userId);
+//        String refreshToken = jwtProvider.generateRefreshToken(userId);
+//
+//        // Redis에 Refresh Token 저장 (7일 유지)
+//        redisTemplate.opsForValue().set("refreshToken:" + userId, refreshToken, 7, TimeUnit.DAYS);
+//
+//        return Map.of(
+//                "access_token", accessToken,
+//                "refresh_token", refreshToken,
+//                "token_type", "Bearer"
+//        );
+//    }
 
     // Refresh Token을 사용하여 새로운 Access Token 발급
     public Map<String, String> refreshAccessToken(String userId, String refreshToken) {
@@ -57,19 +57,19 @@ public class AuthService {
         redisTemplate.delete("refreshToken:" + userId);
     }
 
-
-    // OAuth 2.0 로그인 처리
-    public UserResponseDto loginWithOAuth(UserRequestDto userRequestDto) {
-        String userId = userRequestDto.getProvider() + "_" + userRequestDto.getProviderId(); // OAuth 제공자 + ID 조합
-
-        // Access Token & Refresh Token 발급
-        String accessToken = jwtProvider.generateAccessToken(userId);
-        String refreshToken = jwtProvider.generateRefreshToken(userId);
-
-        // Redis에 Refresh Token 저장 (7일 유지)
-        redisTemplate.opsForValue().set("refreshToken:" + userId, refreshToken, 7, TimeUnit.DAYS);
-
-        return new UserResponseDto(userId, userRequestDto.getUsername(), userRequestDto.getEmail(), accessToken, refreshToken);
-    }
+//
+//    // OAuth 2.0 로그인 처리
+//    public UserResponseDto loginWithOAuth(UserRequestDto userRequestDto) {
+//        String userId = userRequestDto.getProvider() + "_" + userRequestDto.getProviderId(); // OAuth 제공자 + ID 조합
+//
+//        // Access Token & Refresh Token 발급
+//        String accessToken = jwtProvider.generateAccessToken(userId);
+//        String refreshToken = jwtProvider.generateRefreshToken(userId);
+//
+//        // Redis에 Refresh Token 저장 (7일 유지)
+//        redisTemplate.opsForValue().set("refreshToken:" + userId, refreshToken, 7, TimeUnit.DAYS);
+//
+//        return new UserResponseDto(userId, userRequestDto.getUsername(), userRequestDto.getEmail(), accessToken, refreshToken);
+//    }
 
 }

@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://auth-service.msa.local
+          predicates:
+            - Path=/auth/**
+          filters:
+            - TokenRelay=
+        - id: user-service
+          uri: http://user-service.msa.local
+          predicates:
+            - Path=/users/**
+          filters:
+            - TokenRelay=
+        - id: song-service
+          uri: http://song-service.msa.local
+          predicates:
+            - Path=/songs/**
+          filters:
+            - TokenRelay=
+        - id: lyrics-service
+          uri: http://lyrics-service.msa.local
+          predicates:
+            - Path=/lyrics/**
+          filters:
+            - TokenRelay=

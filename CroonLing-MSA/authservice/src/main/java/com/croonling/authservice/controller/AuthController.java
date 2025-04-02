@@ -18,11 +18,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // 로그인 후 Access Token + Refresh Token 발급
-    @GetMapping("/callback")
-    public ResponseEntity<Map<String, String>> callback(@RequestParam String userId) {
-        return ResponseEntity.ok(authService.generateTokens(userId));
-    }
+//    // 로그인 후 Access Token + Refresh Token 발급
+//    @GetMapping("/callback")
+//    public ResponseEntity<Map<String, String>> callback(@RequestParam String userId) {
+//        return ResponseEntity.ok(authService.generateTokens(userId));
+//    }
 
     // Refresh Token을 사용하여 새로운 Access Token 발급
     @PostMapping("/refresh")
@@ -37,9 +37,9 @@ public class AuthController {
         return ResponseEntity.ok("로그아웃 완료");
     }
 
-    // OAuth 2.0 로그인 (사용자가 Discord 또는 Google로 로그인하면 호출됨)
-    @PostMapping("/oauth/login")
-    public ResponseEntity<UserResponseDto> loginWithOAuth(@RequestBody UserRequestDto userRequestDto) {
-        return ResponseEntity.ok(authService.loginWithOAuth(userRequestDto));
-    }
+//    // OAuth 2.0 로그인 (사용자가 Discord 또는 Google로 로그인하면 호출됨)
+//    @PostMapping("/oauth/login")
+//    public ResponseEntity<UserResponseDto> loginWithOAuth(@RequestBody UserRequestDto userRequestDto) {
+//        return ResponseEntity.ok(authService.loginWithOAuth(userRequestDto));
+//    }
 }

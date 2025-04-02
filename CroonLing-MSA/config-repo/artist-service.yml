@@ -1,0 +1,8 @@
+server:
+  port: 8086
+
+spotify:
+  api:
+    client-id: ${SPOTIFY_CLIENT_ID}
+    client-secret: ${SPOTIFY_CLIENT_SECRET}
+    token-uri: https://accounts.spotify.com/api/token
