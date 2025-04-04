@@ -1,4 +1,4 @@
-package com.croonling.songservice.dto;
+package com.croonling.songservice.model.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +13,7 @@ public class SongRequestDto {
     private List<String> songNames;
     private String artistId;
     private String albumName;
+    private List<String> artistNames;
     private String releaseDate;
     private String trackImageUrl;
     private String url;
@@ -22,10 +23,11 @@ public class SongRequestDto {
     private String phoneticsKoreanLyrics;
 
     @Builder
-    public SongRequestDto(String songId, List<String> songNames, String artistId, String albumName, String releaseDate, String trackImageUrl, String url, String lyrics, String translatedLyrics, String phoneticsLyrics, String phoneticsKoreanLyrics) {
+    public SongRequestDto(String songId, List<String> songNames, String artistId, List<String> artistNames, String albumName, String releaseDate, String trackImageUrl, String url, String lyrics, String translatedLyrics, String phoneticsLyrics, String phoneticsKoreanLyrics) {
         this.songId = songId;
         this.songNames = songNames;
         this.artistId = artistId;
+        this.artistNames = artistNames;
         this.albumName = albumName;
         this.releaseDate = releaseDate;
         this.trackImageUrl = trackImageUrl;

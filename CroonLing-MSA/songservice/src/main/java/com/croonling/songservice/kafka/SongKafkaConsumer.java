@@ -1,6 +1,7 @@
-package com.croonling.songservice.service;
+package com.croonling.songservice.kafka;
 
-import com.croonling.songservice.dto.SongRequestDto;
+import com.croonling.songservice.model.dto.SongRequestDto;
+import com.croonling.songservice.service.SongService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,8 +22,8 @@ public class SongKafkaConsumer {
     public void consume(ConsumerRecord<String, String> record) {
         try {
             SongRequestDto songDto = objectMapper.readValue(record.value(), SongRequestDto.class);
-            songService.saveSong(songDto);
-            System.out.println("✅ Received and saved song: " + songDto);
+            songService.saveFromKafka(songDto);  // ✅ 여기서 변경
+            System.out.println("✅ Received and saved song: " + songDto.getSongId());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,4 +1,4 @@
-package com.croonling.songservice.entity;
+package com.croonling.songservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,7 +25,7 @@ public class Song {
 
     @ElementCollection
     @CollectionTable(name = "song_artist_names", joinColumns = @JoinColumn(name = "song_id"))
-    @Column(name = "artist_name")
+    @Column(name = "artist_names")
     private List<String> artistNames;
 
     @Column(name = "album_name")

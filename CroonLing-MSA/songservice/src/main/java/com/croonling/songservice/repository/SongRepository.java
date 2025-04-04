@@ -1,6 +1,6 @@
 package com.croonling.songservice.repository;
 
-import com.croonling.songservice.entity.Song;
+import com.croonling.songservice.model.entity.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

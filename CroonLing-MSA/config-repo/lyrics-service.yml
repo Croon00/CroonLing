@@ -1,8 +1,28 @@
-server:
-  port: 8084
-
 spring:
-  elasticsearch:
-    uris: http://localhost:9200
-    username: ${ELASTIC_USERNAME}
-    password: ${ELASTIC_PASSWORD}
+  application:
+    name: lyrics-service
+
+  cloud:
+    config:
+      name: lyrics-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: lyrics-service-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/lyrics_db
+    username: lyrics_user
+    password: lyrics_pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8085

@@ -1,8 +1,28 @@
-server:
-  port: 8086
+spring:
+  application:
+    name: artist-service
 
-spotify:
-  api:
-    client-id: ${SPOTIFY_CLIENT_ID}
-    client-secret: ${SPOTIFY_CLIENT_SECRET}
-    token-uri: https://accounts.spotify.com/api/token
+  datasource:
+    url: jdbc:mariadb://localhost:3306/artist_db
+    username: artist_user
+    password: artist_pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  cloud:
+    config:
+      name: artist-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: lyrics-service-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+server:
+  port: 8083

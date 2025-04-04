@@ -1,12 +1,11 @@
 package com.croonling.songservice.converter;
 
-import com.croonling.songservice.dto.SongRequestDto;
-import com.croonling.songservice.dto.SongResponseDto;
-import com.croonling.songservice.entity.Song;
+import com.croonling.songservice.model.dto.SongRequestDto;
+import com.croonling.songservice.model.dto.SongResponseDto;
+import com.croonling.songservice.model.entity.Song;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class SongConverter {

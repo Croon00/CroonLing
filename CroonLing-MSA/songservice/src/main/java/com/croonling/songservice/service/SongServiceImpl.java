@@ -1,35 +1,54 @@
 package com.croonling.songservice.service;
 
-import com.croonling.songservice.converter.SongConverter;
-import com.croonling.songservice.dto.SongRequestDto;
-import com.croonling.songservice.dto.SongResponseDto;
-import com.croonling.songservice.entity.Song;
-import com.croonling.songservice.exception.SongNotFoundException;
+import com.croonling.songservice.model.dto.SongRequestDto;
+import com.croonling.songservice.model.dto.SongResponseDto;
+import com.croonling.songservice.model.entity.Song;
 import com.croonling.songservice.repository.SongRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
-    private final SongConverter songConverter;
 
-    @Override
-    @Transactional
-    public SongResponseDto saveSong(SongRequestDto songRequestDto) {
-        Song song = songConverter.toEntity(songRequestDto);
-        Song savedSong = songRepository.save(song);
-        return songConverter.toResponse(savedSong);
+    public SongServiceImpl(SongRepository songRepository) {
+        this.songRepository = songRepository;
     }
 
     @Override
-    @Transactional(readOnly = true)
+    public void saveFromKafka(SongRequestDto songRequestDto) {
+        Song song = Song.builder()
+                .songId(songRequestDto.getSongId())
+                .songNames(songRequestDto.getSongNames())
+                .artistId(songRequestDto.getArtistId())
+                .artistNames(songRequestDto.getArtistNames())
+                .albumName(songRequestDto.getAlbumName())
+                .releaseDate(songRequestDto.getReleaseDate())
+                .trackImageUrl(songRequestDto.getTrackImageUrl())
+                .url(songRequestDto.getUrl())
+                .lyrics(songRequestDto.getLyrics())
+                .translatedLyrics(songRequestDto.getTranslatedLyrics())
+                .phoneticsLyrics(songRequestDto.getPhoneticsLyrics())
+                .phoneticsKoreanLyrics(songRequestDto.getPhoneticsKoreanLyrics())
+                .build();
+
+        songRepository.save(song);
+        System.out.println("🎵 Song 저장 완료: " + songRequestDto.getSongId());
+    }
+
+    @Override
     public SongResponseDto getSongById(String songId) {
         Song song = songRepository.findById(songId)
-                .orElseThrow(() -> new SongNotFoundException("해당 곡을 찾을 수 없습니다. ID: " + songId));
-        return songConverter.toResponse(song);
+                .orElseThrow(() -> new RuntimeException("해당 곡이 없습니다. ID: " + songId));
+        return SongResponseDto.fromEntity(song);
+    }
+
+    @Override
+    public List<SongResponseDto> getAllSongs() {
+        return songRepository.findAll()
+                .stream()
+                .map(SongResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }

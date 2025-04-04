@@ -1,9 +1,12 @@
 package com.croonling.songservice.service;
 
-import com.croonling.songservice.dto.SongRequestDto;
-import com.croonling.songservice.dto.SongResponseDto;
+import com.croonling.songservice.model.dto.SongRequestDto;
+import com.croonling.songservice.model.dto.SongResponseDto;
+
+import java.util.List;
 
 public interface SongService {
-    SongResponseDto saveSong(SongRequestDto requestDto);
+    void saveFromKafka(SongRequestDto songRequestDto);
     SongResponseDto getSongById(String songId);
+    List<SongResponseDto> getAllSongs();
 }

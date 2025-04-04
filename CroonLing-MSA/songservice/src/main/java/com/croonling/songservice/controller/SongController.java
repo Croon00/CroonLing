@@ -1,7 +1,7 @@
 package com.croonling.songservice.controller;
 
-import com.croonling.songservice.dto.SongRequestDto;
-import com.croonling.songservice.dto.SongResponseDto;
+import com.croonling.songservice.model.dto.SongRequestDto;
+import com.croonling.songservice.model.dto.SongResponseDto;
 import com.croonling.songservice.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,8 @@ public class SongController {
 
     private final SongService songService;
 
-    @PostMapping
-    public ResponseEntity<SongResponseDto> saveSong(@RequestBody SongRequestDto requestDto) {
-        return ResponseEntity.ok(songService.saveSong(requestDto));
-    }
 
+    // 노래 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<SongResponseDto> getSongById(@PathVariable String id) {
         return ResponseEntity.ok(songService.getSongById(id));
