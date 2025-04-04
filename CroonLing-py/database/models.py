@@ -11,12 +11,12 @@ class ArtistModel(BaseModel):
     followers: Optional[int] = Field(None, description="Number of followers on Spotify")
     profile_image_url: Optional[str] = Field(None, description="URL of the artist's profile image")
     external_url: Optional[str] = Field(None, description="Spotify artist profile URL")
-    
+
     @staticmethod
     def get_collection():
         return mongo_db["artists"]
 
-# ✅ 곡 모델 (songs 컬렉션)
+# ✅ 곡 모델 (songs 컬렉션) — 가사 관련 필드 제거됨
 class SongModel(BaseModel):
     song_id: str = Field(..., description="Spotify Song ID")
     song_names: List[str] = Field(default=[], description="List of Song Names (English, Korean, etc.)")
@@ -26,11 +26,20 @@ class SongModel(BaseModel):
     release_date: Optional[str] = Field(None, description="Release Date")
     track_image_url: Optional[str] = Field(None, description="Track Image URL")
     url: Optional[str] = Field(None, description="Spotify URL")
-    lyrics: Optional[str] = Field(None, description="Lyrics of the song")
-    translated_lyrics: Optional[str] = Field(None, description="Translated lyrics")
-    phonetics_lyrics: Optional[str] = Field(None, description="Phonetic representation of lyrics")
-    phonetics_korean_lyrics: Optional[str] = Field(None, description="Korean phonetic representation")
 
     @staticmethod
     def get_collection():
         return mongo_db["songs"]
+
+# ✅ 필요 시, lyrics 모델도 따로 만들 수 있음
+class LyricsModel(BaseModel):
+    song_id: str = Field(..., description="참조할 Song ID")
+    lyrics: Optional[str] = None
+    translated_lyrics: Optional[str] = None
+    phonetics_lyrics: Optional[str] = None
+    phonetics_korean_lyrics: Optional[str] = None
+    kanji_info: Optional[str] = None
+
+    @staticmethod
+    def get_collection():
+        return mongo_db["lyrics"]
