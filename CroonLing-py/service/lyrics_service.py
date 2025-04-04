@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 
-from database.lyrics_db import LyricsDB  # ✅ 변경된 DB 클래스
+from database import LyricsDB  # ✅ 변경된 DB 클래스
 
 # ✅ 로깅 설정
 logging.basicConfig(

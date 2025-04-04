@@ -1,4 +1,4 @@
-from database.artists_db import ArtistsDB
+from database import ArtistsDB
 import logging
 class ArtistsService:
     def __init__(self):

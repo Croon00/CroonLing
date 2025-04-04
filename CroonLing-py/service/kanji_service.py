@@ -1,4 +1,4 @@
-from database.lyrics_db import LyricsDB  # ✅ 변경된 DB 클래스 사용
+from database import LyricsDB  # ✅ 변경된 DB 클래스 사용
 from apis import ChatgptApi
 import logging
 
