@@ -8,15 +8,15 @@ spring:
         - AddRequestHeader=X-Request-Foo, Bar
       routes:
         - id: song-service
-          uri: http://localhost:8081
+          uri: http://localhost:8083
           predicates:
             - Path=/songs/**
         - id: lyrics-service
-          uri: http://localhost:8082
+          uri: http://localhost:8084
           predicates:
             - Path=/lyrics/**
         - id: artist-service
-          uri: http://localhost:8083
+          uri: http://localhost:8085
           predicates:
             - Path=/artists/**
 
