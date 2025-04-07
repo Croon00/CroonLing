@@ -13,7 +13,7 @@ db = client["croonling"]
 
 # ✅ Kafka 설정
 producer = KafkaProducer(
-    bootstrap_servers="localhost:9092",
+    bootstrap_servers=config.get("KAFKA_BOOTSTRAP_SERVERS"),
     value_serializer=lambda x: json.dumps(x).encode("utf-8")
 )
 

@@ -13,4 +13,5 @@ def load_config():
         "MONGO_URI": os.getenv("MONGO_URI"),
         "SPOTIFY_CLIENT_ID": os.getenv("SPOTIFY_CLIENT_ID"),
         "SPOTIFY_CLIENT_SECRET": os.getenv("SPOTIFY_CLIENT_SECRET"),
+        "KAFKA_BOOTSTRAP_SERVERS": os.getenv("KAFKA_BOOTSTRAP_SERVERS"),
     }
