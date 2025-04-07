@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: lyrics-service
@@ -7,7 +10,7 @@ spring:
       name: lyrics-service
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
       group-id: lyrics-service-group
       auto-offset-reset: latest
@@ -16,13 +19,12 @@ spring:
 
   datasource:
     url: jdbc:mariadb://localhost:3306/lyrics_db
-    username: lyrics_user
-    password: lyrics_pass
+    username: ${DB_PASSWORD}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
-server:
-  port: 8080
+

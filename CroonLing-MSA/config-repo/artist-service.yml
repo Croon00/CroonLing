@@ -1,11 +1,14 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: artist-service
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/artist_db
-    username: artist_user
-    password: artist_pass
+    url: jdbc:mariadb://croonling-mariadb.cd8oeo4qscnq.ap-northeast-2.rds.amazonaws.com:3306/croonling
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -17,12 +20,11 @@ spring:
       name: artist-service
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     consumer:
       group-id: lyrics-service-group
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-server:
-  port: 8080
+

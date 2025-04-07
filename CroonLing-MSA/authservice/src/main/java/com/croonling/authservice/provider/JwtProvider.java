@@ -19,7 +19,7 @@ public class JwtProvider {
     private final Key key;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public JwtProvider(@Value("${jwt.secret}") String secretKey, RedisTemplate<String, String> redisTemplate) {
+    public JwtProvider(@Value("${JWT_SECRET}") String secretKey, RedisTemplate<String, String> redisTemplate) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
         this.redisTemplate = redisTemplate;
     }

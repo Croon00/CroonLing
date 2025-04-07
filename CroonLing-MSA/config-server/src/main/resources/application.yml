@@ -1,5 +1,5 @@
 server:
-  port: 8888  # Config Server 포트
+  port: 8888
 
 spring:
   application:
@@ -8,6 +8,6 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/YOUR_GITHUB_REPO/config-repo.git
+          uri: https://github.com/Croon00/config-repo.git
           default-label: main
           clone-on-start: true
