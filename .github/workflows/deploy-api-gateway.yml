@@ -36,5 +36,5 @@ jobs:
         run: |
           aws ecs update-service \
             --cluster croonling-cluster \
-            --service api-gateway-service \
+            --service api-gateway \
             --force-new-deployment

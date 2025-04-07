@@ -36,5 +36,5 @@ jobs:
         run: |
           aws ecs update-service \
             --cluster croonling-cluster \
-            --service config-server-service \
+            --service config-server \
             --force-new-deployment
