@@ -4,10 +4,12 @@ import com.croonling.artistservice.model.dto.ArtistRequestDto;
 import com.croonling.artistservice.model.dto.ArtistResponseDto;
 import com.croonling.artistservice.model.entity.Artist;
 import com.croonling.artistservice.repository.ArtistRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ArtistServiceImpl implements ArtistService{
 
     private ArtistRepository artistRepository;

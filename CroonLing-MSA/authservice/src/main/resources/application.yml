@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+
+  cloud:
+    config:
+      name: auth-service
+
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            client-id: ${DISCORD_CLIENT_ID}
+            client-secret: ${DISCORD_CLIENT_SECRET}
+            scope: identify,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/discord"
+        provider:
+          discord:
+            authorization-uri: https://discord.com/oauth2/authorize
+            token-uri: https://discord.com/api/oauth2/token
+            user-info-uri: https://discord.com/api/users/@me
+            user-name-attribute: id
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000 # 1시간
+
+security:
+  csrf-disabled: true
+  public-endpoints:
+    - /auth/login
+    - /auth/callback
+  oauth2:
+    default-success-url: /auth/callback

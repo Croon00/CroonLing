@@ -4,10 +4,12 @@ import com.croonling.songservice.model.dto.SongRequestDto;
 import com.croonling.songservice.model.dto.SongResponseDto;
 import com.croonling.songservice.model.entity.Song;
 import com.croonling.songservice.repository.SongRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
