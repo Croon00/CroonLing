@@ -1,15 +1,16 @@
-# Java 21 JDK가 포함된 경량 Alpine 기반 이미지 사용
-FROM eclipse-temurin:21-jdk-alpine
-
-# 작업 디렉토리
+# 1단계: Build
+FROM gradle:8.4.0-jdk21 AS build
 WORKDIR /app
 
-# 빌드한 JAR 파일을 컨테이너에 복사
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+COPY build.gradle settings.gradle ./
+COPY src ./src
 
-# 포트 설정 (Eureka 기본 포트)
+RUN gradle bootJar --no-daemon
+
+# 2단계: Run
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8761
-
-# 애플리케이션 실행 명령
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
