@@ -1,6 +1,3 @@
-server:
-  port: 8888
-
 spring:
   application:
     name: config-server
@@ -11,3 +8,5 @@ spring:
           uri: https://github.com/Croon00/config-repo.git
           default-label: main
           clone-on-start: true
+          username: ${GIT_USERNAME}
+          password: ${GIT_PASSWORD}
