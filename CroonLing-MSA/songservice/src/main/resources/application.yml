@@ -35,3 +35,8 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 jwt:
   secret: ${JWT_SECRET}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka

@@ -41,3 +41,8 @@ security:
     - /auth/callback
   oauth2:
     default-success-url: /auth/callback
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka

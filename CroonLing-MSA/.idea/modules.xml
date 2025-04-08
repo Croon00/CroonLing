@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/CroonLing-MSA.iml" filepath="$PROJECT_DIR$/.idea/CroonLing-MSA.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.croonling.api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.croonling.api-gateway.main.iml" />
     </modules>
   </component>
 </project>

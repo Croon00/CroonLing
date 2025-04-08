@@ -36,5 +36,7 @@ spring:
       resourceserver:
         jwt:
           secret-key: ${JWT_SECRET}
-
-
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka
