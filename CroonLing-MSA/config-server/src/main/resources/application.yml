@@ -5,7 +5,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Croon00/config-repo.git
+          uri: https://github.com/Croon00/CroonLing-MSA.git
           default-label: main
           clone-on-start: true
           username: ${GIT_USERNAME}
