@@ -6,7 +6,7 @@ spring:
     name: user-service
 
   datasource:
-    url: jdbc:mariadb://croonling-mariadb.cd8oeo4qscnq.ap-northeast-2.rds.amazonaws.com:3306/croonling
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver

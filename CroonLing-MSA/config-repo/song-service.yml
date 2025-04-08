@@ -6,7 +6,7 @@ spring:
     name: song-service
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/song_db
+    url: ${DB_URL}
     username: ${DB_PASSWORD}
     password: ${DB_PASSWORD}
 
