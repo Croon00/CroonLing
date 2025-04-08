@@ -3,4 +3,4 @@ spring:
     name: lyrics-service
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: ${CONFIG_SERVER_URI}
