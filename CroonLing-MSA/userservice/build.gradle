@@ -27,7 +27,7 @@ dependencies {
 	// Spring Boot 기본 구성
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	// JPA & DB 연동
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // ✅ MariaDB 사용
