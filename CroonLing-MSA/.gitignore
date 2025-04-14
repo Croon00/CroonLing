@@ -1,1 +1,44 @@
+# === [공통: 환경변수 / 설정 파일] ===
 .env
+.env.*
+*.properties
+*.yml
+*.yaml
+
+# === [IntelliJ 설정] ===
+.idea/
+*.iml
+
+# === [VSCode 설정] ===
+.vscode/
+
+# === [Gradle 빌드 파일] ===
+.gradle/
+build/
+out/
+
+# === [Log 파일 및 캐시] ===
+logs/
+*.log
+*.tmp
+
+# === [OS 별 파일] ===
+.DS_Store
+Thumbs.db
+
+# === [테스트 리포트 등 임시 파일] ===
+test-output/
+coverage/
+*.exec
+
+# === [Eclipse 설정 (혹시 같이 쓴다면)] ===
+.classpath
+.project
+.settings/
+
+# === [Node / Frontend 관련 폴더] ===
+node_modules/
+dist/
+
+# === [Docker / CI 설정에서 자동 생성되는 파일] ===
+docker-compose.override.yml
