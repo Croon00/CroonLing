@@ -32,7 +32,6 @@ public class ArtistServiceImpl implements ArtistService{
                 .build();
 
         artistRepository.save(artist);
-        System.out.println("🎵 Artist 저장 완료: " + artistRequestDto.getArtistId());
     }
 
     @Override

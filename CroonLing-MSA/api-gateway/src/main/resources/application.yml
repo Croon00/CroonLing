@@ -10,22 +10,30 @@ spring:
       default-filters:
         - AddRequestHeader=X-Request-Foo, Bar
       routes:
-        - id: song-service
-          uri: lb://song-service
-          predicates:
-            - Path=/songs/**
-        - id: lyrics-service
-          uri: lb://lyrics-service
-          predicates:
-            - Path=/lyrics/**
-        - id: artist-service
-          uri: lb://artist-service
-          predicates:
-            - Path=/artists/**
         - id: auth-service
-          uri: lb://auth-service
+          uri: ${AUTH_SERVICE_URI:http://localhost:8080}
           predicates:
             - Path=/auth/**
+
+        - id: user-service
+          uri: ${USER_SERVICE_URI:http://localhost:8081}
+          predicates:
+            - Path=/user/**
+
+        - id: artist-service
+          uri: ${ARTIST_SERVICE_URI:http://localhost:8082}
+          predicates:
+            - Path=/artists/**
+
+        - id: song-service
+          uri: ${SONG_SERVICE_URI:http://localhost:8083}
+          predicates:
+            - Path=/songs/**
+
+        - id: lyrics-service
+          uri: ${LYRICS_SERVICE_URI:http://localhost:8084}
+          predicates:
+            - Path=/lyrics/**
 
     config:
       name: api-gateway
@@ -39,4 +47,19 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-server:8761/eureka
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: auth-service
+        uri: /auth-service/v3/api-docs
+      - name: user-service
+        url: /user-service/v3/api-docs
+      - name: artist-service
+        url: /artist-service/v3/api-docs
+      - name: song-service
+        url: /song-service/v3/api-docs
+      - name: lyrics-service
+        url: /lyrics-service/v3/api-docs
+

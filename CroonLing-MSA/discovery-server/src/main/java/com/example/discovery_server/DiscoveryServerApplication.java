@@ -1,4 +1,4 @@
-package com.example.discover_server;
+package com.example.discovery_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 @SpringBootApplication
 @EnableEurekaServer
-public class DiscoverServerApplication {
+public class DiscoveryServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DiscoverServerApplication.class, args);
+		SpringApplication.run(DiscoveryServerApplication.class, args);
 	}
 
 }

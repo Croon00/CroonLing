@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // 🔽 이거 버전 해결됨
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
 	// ✅ Kafka 관련 의존성 추가
 	implementation 'org.springframework.kafka:spring-kafka'

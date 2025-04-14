@@ -5,7 +5,14 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/CroonLing-MSA.iml" filepath="$PROJECT_DIR$/.idea/CroonLing-MSA.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artistservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/artistservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/artistservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/artistservice.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/authservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/authservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.croonling.api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.croonling.api-gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.croonling.artistservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.croonling.artistservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lyricsservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lyricsservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/songservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/songservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userservice.main.iml" />
     </modules>
   </component>
 </project>
