@@ -53,7 +53,8 @@ class LyricsService:
 
         driver = None
         try:
-            service = Service("C:/asdf/chromedriver-win64/chromedriver.exe")
+            # 배포 환경에 맞는 크롬드라이버 경로
+            service = Service("/usr/bin/chromedriver")
             driver = webdriver.Chrome(service=service, options=chrome_options)
 
             driver.get(search_url)
@@ -68,20 +69,27 @@ class LyricsService:
                 f.write(driver.page_source)
                 self.logger.info("📝 디버깅용 HTML 저장 완료: lyrics_result.html")
 
-            # 기존 ujudUb 클래스 대신 텍스트 블럭이 포함된 가사 위치를 기반으로 선택
             WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//div[contains(text(), '立っている')]"))
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
 
-            lyrics_blocks = driver.find_elements(By.XPATH, "//div[contains(@class, 'd6Ejqe')]")
-            lyrics = "\n".join(block.text for block in lyrics_blocks if block.text.strip())
+            # 모든 div 중 텍스트 블럭이 길고 줄바꿈이 포함된 것들을 후보로 판단
+            divs = driver.find_elements(By.XPATH, "//div[not(@aria-hidden)]")
+            candidates = []
+            for div in divs:
+                text = div.text.strip()
+                if len(text) > 100 and '\n' in text:
+                    candidates.append(text)
+
+            # 가장 긴 블럭을 가사로 간주
+            lyrics = max(candidates, key=len) if candidates else None
 
             if lyrics:
-                self.logger.info("✅ 가사 가져옴!")
-                await self.lyrics_db.upsert_lyrics(song_id, lyrics.strip())
-                return lyrics.strip()
+                self.logger.info("✅ 가사 추출 성공")
+                await self.lyrics_db.upsert_lyrics(song_id, lyrics)
+                return lyrics
             else:
-                self.logger.warning("⚠️ 가사 정보를 가져오지 못했습니다.")
+                self.logger.warning("⚠️ 유효한 가사 블럭을 찾을 수 없습니다.")
                 return None
 
         except TimeoutException:
@@ -91,7 +99,7 @@ class LyricsService:
         except WebDriverException as e:
             self.logger.exception(f"🚨 WebDriver 오류 발생: {e}")
         except Exception as e:
-            self.logger.exception(f"❌ 예상치 못한 오류 발생: {e}")
+            self.logger.exception(f"❌ 예기치 못한 오류 발생: {e}")
         finally:
             if driver:
                 driver.quit()
