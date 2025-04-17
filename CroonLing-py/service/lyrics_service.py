@@ -73,21 +73,14 @@ class LyricsService:
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
 
-            # 모든 div 중 텍스트 블럭이 길고 줄바꿈이 포함된 것들을 후보로 판단
-            divs = driver.find_elements(By.XPATH, "//div[not(@aria-hidden)]")
-            candidates = []
-            for div in divs:
-                text = div.text.strip()
-                if len(text) > 100 and '\n' in text:
-                    candidates.append(text)
-
-            # 가장 긴 블럭을 가사로 간주
-            lyrics = max(candidates, key=len) if candidates else None
+            # 가사 div 선택: Google이 추출한 가사 정보는 특정 CSS 클래스를 가짐
+            lyrics_divs = driver.find_elements(By.CSS_SELECTOR, "div.ilUpNd.d6Ejqe.aSRlid")
+            lyrics = "\n".join(div.text.strip() for div in lyrics_divs if len(div.text.strip()) > 100)
 
             if lyrics:
                 self.logger.info("✅ 가사 추출 성공")
-                await self.lyrics_db.upsert_lyrics(song_id, lyrics)
-                return lyrics
+                await self.lyrics_db.upsert_lyrics(song_id, lyrics.strip())
+                return lyrics.strip()
             else:
                 self.logger.warning("⚠️ 유효한 가사 블럭을 찾을 수 없습니다.")
                 return None
