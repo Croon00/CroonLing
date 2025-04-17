@@ -53,8 +53,7 @@ class LyricsService:
 
         driver = None
         try:
-            self.logger.info("🚀 Chrome WebDriver 실행 중...")
-            service = Service("/usr/bin/chromedriver")
+            service = Service("C:/asdf/chromedriver-win64/chromedriver.exe")
             driver = webdriver.Chrome(service=service, options=chrome_options)
 
             driver.get(search_url)
@@ -64,37 +63,35 @@ class LyricsService:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)
 
-            WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'ujudUb')]/span"))
-            )
-
-            self.logger.info("✅ 가사 요소 발견 완료")
-
-            # 페이지 저장 (디버깅용)
+            # 디버깅용 HTML 저장
             with open("lyrics_result.html", "w", encoding="utf-8") as f:
                 f.write(driver.page_source)
+                self.logger.info("📝 디버깅용 HTML 저장 완료: lyrics_result.html")
 
-            lyrics_divs = driver.find_elements(By.XPATH, "//div[contains(@class, 'ujudUb')]")
-            if not lyrics_divs:
-                self.logger.warning("⚠️ 가사 div 찾기 실패")
-                return None
+            # 기존 ujudUb 클래스 대신 텍스트 블럭이 포함된 가사 위치를 기반으로 선택
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//div[contains(text(), '立っている')]"))
+            )
 
-            lyrics = "\n".join(span.text for div in lyrics_divs for span in div.find_elements(By.TAG_NAME, "span"))
+            lyrics_blocks = driver.find_elements(By.XPATH, "//div[contains(@class, 'd6Ejqe')]")
+            lyrics = "\n".join(block.text for block in lyrics_blocks if block.text.strip())
 
-            if lyrics.strip():
-                self.logger.info("✅ 가사 추출 성공")
+            if lyrics:
+                self.logger.info("✅ 가사 가져옴!")
                 await self.lyrics_db.upsert_lyrics(song_id, lyrics.strip())
                 return lyrics.strip()
             else:
-                self.logger.warning("⚠️ 빈 가사 텍스트")
+                self.logger.warning("⚠️ 가사 정보를 가져오지 못했습니다.")
                 return None
 
-        except (TimeoutException, NoSuchElementException):
-            self.logger.error("❌ 요소 로딩 실패 - 가사 못 찾음")
+        except TimeoutException:
+            self.logger.error("⏳ 페이지 로딩 시간 초과")
+        except NoSuchElementException:
+            self.logger.error("❌ 요소를 찾을 수 없음")
         except WebDriverException as e:
             self.logger.exception(f"🚨 WebDriver 오류 발생: {e}")
         except Exception as e:
-            self.logger.exception(f"❌ 예외 발생: {e}")
+            self.logger.exception(f"❌ 예상치 못한 오류 발생: {e}")
         finally:
             if driver:
                 driver.quit()
