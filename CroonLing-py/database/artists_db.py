@@ -1,4 +1,5 @@
 from database.mongodb import mongo_db
+from pymongo.errors import PyMongoError
 
 class ArtistsDB:
     def __init__(self):
