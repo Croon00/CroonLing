@@ -12,15 +12,15 @@ class LyricsButton(Button):
     async def callback(self, interaction):
         await interaction.response.defer()
 
-        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        song_info = await self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
-        lyrics = self.lyrics_service.get_lyrics(self.track['song_id'])
+        lyrics = await self.lyrics_service.get_lyrics(self.track['song_id'])
         if not lyrics:
             await interaction.followup.send(f"'{self.track['song_name']}'의 가사를 찾을 수 없어 구글에서 검색합니다...")
-            lyrics = self.lyrics_service.fetch_and_save_lyrics(
+            lyrics = await self.lyrics_service.fetch_and_save_lyrics(
                 self.track['song_id'],  # ✅ `song_id`를 추가로 전달
                 self.track['artist_name'],
                 self.track['song_name']

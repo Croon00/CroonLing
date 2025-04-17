@@ -21,7 +21,7 @@ class SaveButton(Button):
             logging.info(f"🔹 '{self.track['song_name']}' 저장 버튼 클릭됨2")
 
             # 곡 정보가 DB에 저장되어 있는지 확인
-            song_info = self.song_service.get_song_info(
+            song_info = await self.song_service.get_song_info(
                 self.track['artist_id'], self.track['song_name']
             )
             logging.info(f"🔹 '{self.track['song_name']}'곡 저장되는지 확인")
@@ -31,7 +31,7 @@ class SaveButton(Button):
                 await saving_message.edit(content="이미 저장된 곡입니다.")
             else:
                 # 저장 로직 수행
-                self.song_service.save_track(self.track)
+                await self.song_service.save_track(self.track)
                 logging.info(f"✅ 곡 저장 완료: {self.track['song_name']}")
                 await saving_message.edit(content="저장 완료!")
 

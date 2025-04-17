@@ -12,17 +12,17 @@ class PhoneticsKoreanButton(Button):
     async def callback(self, interaction):
         await interaction.response.defer()
 
-        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        song_info = await self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
-        korean_pronunciation = self.phonetics_korean_service.get_korean_phonetics(self.track['song_id'])
+        korean_pronunciation = await self.phonetics_korean_service.get_korean_phonetics(self.track['song_id'])
         if not korean_pronunciation:
             await interaction.followup.send("데이터베이스에서 한국어 발음을 찾을 수 없습니다. 생성 중입니다. 잠시만 기다려주세요...")
 
             # ✅ 서비스에서 한국어 발음 생성 요청
-            korean_pronunciation = self.phonetics_korean_service.generate_and_save_korean_phonetics(self.track['song_id'])
+            korean_pronunciation = await self.phonetics_korean_service.generate_and_save_korean_phonetics(self.track['song_id'])
             if not korean_pronunciation:
                 await interaction.followup.send("한국 발음 생성 작업 중 오류가 발생했습니다. (발음 버튼을 먼저 안 누른 경우 발음 버튼을 먼저 누르세요)")
                 return

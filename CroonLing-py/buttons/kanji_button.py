@@ -16,15 +16,15 @@ class KanjiButton(Button):
         await interaction.response.defer()
 
         # ✅ 곡이 DB에 저장되어 있는지 확인
-        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        song_info = await self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
         # ✅ 한자 정보 확인
-        kanji_info = self.kanji_service.get_kanji_info(self.track['song_id'])
+        kanji_info = await self.kanji_service.get_kanji_info(self.track['song_id'])
         if not kanji_info:
-            lyrics = self.lyrics_service.get_lyrics(self.track['song_id'])
+            lyrics = await self.lyrics_service.get_lyrics(self.track['song_id'])
 
             if not lyrics:
                 await interaction.followup.send("데이터베이스에서 가사를 찾을 수 없습니다.")
@@ -32,7 +32,7 @@ class KanjiButton(Button):
 
             # ✅ 한자 정보 요청 (GPT-4 API 호출)
             await interaction.followup.send("가사에서 한자 정보를 추출 중입니다. 잠시만 기다려주세요...")
-            kanji_info = self.kanji_service.lyrics_to_kanji(self.track['song_id'], lyrics)
+            kanji_info = await self.kanji_service.lyrics_to_kanji(self.track['song_id'], lyrics)
 
             if not kanji_info:
                 await interaction.followup.send("한자 정보 추출 중 오류가 발생했습니다.")

@@ -14,15 +14,15 @@ class TranslationButton(Button):
         await interaction.response.defer()
 
         # 곡이 DB에 저장되어 있는지 확인
-        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        song_info = await self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
         # 번역된 가사 확인
-        translation = self.translation_service.get_translated_lyrics(self.track['song_id'])
+        translation = await self.translation_service.get_translated_lyrics(self.track['song_id'])
         if not translation:
-            lyrics = self.lyrics_service.get_lyrics(self.track['song_id'])
+            lyrics = await self.lyrics_service.get_lyrics(self.track['song_id'])
 
             if not lyrics:
                 await interaction.followup.send("데이터베이스에서 가사를 찾을 수 없습니다.")
@@ -30,7 +30,7 @@ class TranslationButton(Button):
 
             # 번역 요청
             await interaction.followup.send("가사를 번역 중입니다. 잠시만 기다려주세요...")
-            translation = self.translation_service.translate_lyrics(self.track['song_id'], lyrics)  # ✅ 변경된 부분
+            translation = await self.translation_service.translate_lyrics(self.track['song_id'], lyrics)  # ✅ 변경된 부분
 
             if not translation:
                 await interaction.followup.send("번역 작업 중 오류가 발생했습니다.")

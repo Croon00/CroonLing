@@ -12,17 +12,17 @@ class PhoneticsButton(Button):
     async def callback(self, interaction):
         await interaction.response.defer()
 
-        song_info = self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
+        song_info = await self.song_service.get_song_info(self.track['artist_id'], self.track['song_name'])
         if not song_info:
             await interaction.followup.send("해당 곡이 데이터베이스에 저장되어 있지 않습니다. 저장 버튼을 눌러 먼저 저장해주세요.")
             return
 
-        pronunciation = self.phonetics_service.get_phonetics(self.track['song_id'])
+        pronunciation = await self.phonetics_service.get_phonetics(self.track['song_id'])
         if not pronunciation:
             await interaction.followup.send("데이터베이스에서 발음을 찾을 수 없습니다. 발음을 생성 중입니다. 잠시만 기다려주세요...")
 
             # ✅ 서비스에서 발음 생성 요청
-            pronunciation = self.phonetics_service.generate_and_save_phonetics(self.track['song_id'])
+            pronunciation = await self.phonetics_service.generate_and_save_phonetics(self.track['song_id'])
             if not pronunciation:
                 await interaction.followup.send("발음 생성 작업 중 오류가 발생했습니다.")
                 return
