@@ -9,9 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 
-from database import LyricsDB  # ✅ 변경된 DB 클래스
+from database import LyricsDB
 
-# ✅ 로깅 설정
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -19,13 +18,12 @@ logging.basicConfig(
 
 class LyricsService:
     def __init__(self):
-        self.lyrics_db = LyricsDB()  # ✅ 새로 만든 DB 클래스 사용
+        self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
 
-    def get_lyrics(self, song_id):
-        """곡의 가사 반환"""
+    async def get_lyrics(self, song_id):
         try:
-            data = self.lyrics_db.find_lyrics_by_id(song_id)
+            data = await self.lyrics_db.find_lyrics_by_id(song_id)
             if data and "lyrics" in data:
                 self.logger.info(f"✅ 가사 조회 성공 (ID: {song_id})")
                 return data["lyrics"]
@@ -36,15 +34,13 @@ class LyricsService:
             self.logger.exception(f"❌ 가사 검색 중 오류 발생: {e}")
             return None
 
-    def fetch_and_save_lyrics(self, song_id, artist_name, song_name):
-        """Selenium을 사용하여 구글에서 가사를 검색하고 저장"""
+    async def fetch_and_save_lyrics(self, song_id, artist_name, song_name):
         self.logger.info(f"🔍 가사 검색 시작: {artist_name} - {song_name}")
 
         search_query = f"{artist_name} {song_name} lyrics"
         search_url = f"https://www.google.com/search?q={search_query.replace(' ', '+')}"
         self.logger.debug(f"🔗 검색 URL: {search_url}")
 
-        # ✅ Chrome 옵션 설정
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
@@ -77,7 +73,7 @@ class LyricsService:
 
             if lyrics.strip():
                 self.logger.info("✅ 가사 가져옴!")
-                self.lyrics_db.upsert_lyrics(song_id, lyrics.strip())  # ✅ 변경된 DB 저장 메서드
+                await self.lyrics_db.upsert_lyrics(song_id, lyrics.strip())
                 return lyrics.strip()
             else:
                 self.logger.warning("⚠️ 가사 정보를 가져오지 못했습니다.")
