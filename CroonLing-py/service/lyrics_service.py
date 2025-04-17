@@ -1,6 +1,3 @@
-import os
-import time
-import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -9,30 +6,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
 
+from webdriver_manager.chrome import ChromeDriverManager  # ✅ 이 줄 추가
 from database import LyricsDB
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
+import logging
+import time
 
 class LyricsService:
     def __init__(self):
         self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
-
-    async def get_lyrics(self, song_id):
-        try:
-            data = await self.lyrics_db.find_lyrics_by_id(song_id)
-            if data and "lyrics" in data:
-                self.logger.info(f"✅ 가사 조회 성공 (ID: {song_id})")
-                return data["lyrics"]
-            else:
-                self.logger.warning(f"⚠️ 가사 없음 (ID: {song_id})")
-                return None
-        except Exception as e:
-            self.logger.exception(f"❌ 가사 검색 중 오류 발생: {e}")
-            return None
 
     async def fetch_and_save_lyrics(self, song_id, artist_name, song_name):
         self.logger.info(f"🔍 가사 검색 시작: {artist_name} - {song_name}")
@@ -53,8 +36,7 @@ class LyricsService:
 
         driver = None
         try:
-            # 배포 환경에 맞는 크롬드라이버 경로
-            service = Service("/usr/bin/chromedriver")
+            service = Service(ChromeDriverManager().install())  # ✅ 자동 설치된 ChromeDriver 사용
             driver = webdriver.Chrome(service=service, options=chrome_options)
 
             driver.get(search_url)
@@ -64,7 +46,6 @@ class LyricsService:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(2)
 
-            # 디버깅용 HTML 저장
             with open("lyrics_result.html", "w", encoding="utf-8") as f:
                 f.write(driver.page_source)
                 self.logger.info("📝 디버깅용 HTML 저장 완료: lyrics_result.html")
@@ -73,7 +54,6 @@ class LyricsService:
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
 
-            # 가사 div 선택: Google이 추출한 가사 정보는 특정 CSS 클래스를 가짐
             lyrics_divs = driver.find_elements(By.CSS_SELECTOR, "div.ilUpNd.d6Ejqe.aSRlid")
             lyrics = "\n".join(div.text.strip() for div in lyrics_divs if len(div.text.strip()) > 100)
 
