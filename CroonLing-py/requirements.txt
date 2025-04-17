@@ -36,3 +36,6 @@ uvloop  # asyncio 성능 향상
 # REST API 서버 운영 (선택 사항)
 fastapi
 gunicorn
+
+# mongoDB 비동기 기반 드라이버
+motor
