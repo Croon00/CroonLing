@@ -29,7 +29,7 @@ class ChatgptApi(APIInterface):
         logging.info("🔍 번역 요청 시작")
         prompt = f"다음 가사를 한국어로 번역해 주세요:\n{text}"
         try:
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful translator."},
@@ -53,7 +53,7 @@ class ChatgptApi(APIInterface):
         logging.info("🔠 발음 변환 요청 시작")
         prompt = f"다음 가사를 로마자 발음으로 변환해 주세요:\n{text}"
         try:
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful translator."},
@@ -69,7 +69,7 @@ class ChatgptApi(APIInterface):
         logging.info("🔠 로마자 → 한글 발음 변환 요청 시작")
         prompt = f"다음 로마자 발음을 한국어 한글 발음으로 변환해 주세요:\n{text}"
         try:
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful translator who converts Romanized Japanese text into Korean phonetics."},
@@ -103,7 +103,7 @@ class ChatgptApi(APIInterface):
 
             🎵 한자 리스트: {', '.join(kanji_kana_list)}
             """
-            response = await self.client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[
                     {"role": "system", "content": "You are a language expert providing detailed kanji explanations."},
