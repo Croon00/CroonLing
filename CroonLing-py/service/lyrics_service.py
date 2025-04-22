@@ -12,12 +12,11 @@ logging.basicConfig(
 
 class LyricsService:
     def __init__(self):
+        # ✅ 환경 변수 로드 방식 변경
+        config = load_config()
         self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
-        
-        # ✅ 환경 변수 로드 방식 변경
-        self.config = load_config()
-        self.serpapi_key = self.config.get("SERPAPI_KEY")
+        self.serpapi_key = config.get("SERPAPI_KEY")
 
     async def get_lyrics(self, song_id):
         try:
