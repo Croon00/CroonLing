@@ -1,9 +1,9 @@
-import os
 import requests
-from bs4 import BeautifulSoup
 import logging
+from bs4 import BeautifulSoup
 
 from database import LyricsDB
+from config_loader import load_config  # ✅ 추가
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -14,7 +14,10 @@ class LyricsService:
     def __init__(self):
         self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
-        self.serpapi_key = os.getenv("SERPAPI_KEY")
+        
+        # ✅ 환경 변수 로드 방식 변경
+        self.config = load_config()
+        self.serpapi_key = self.config.get("SERPAPI_KEY")
 
     async def get_lyrics(self, song_id):
         try:
@@ -33,7 +36,7 @@ class LyricsService:
         self.logger.info(f"🔍 가사 검색 시작: {artist_name} - {song_name}")
 
         if not self.serpapi_key:
-            self.logger.error("❌ SERPAPI_KEY 환경변수가 설정되지 않았습니다.")
+            self.logger.error("❌ SERPAPI_KEY 설정이 누락되었습니다.")
             return None
 
         query = f"{artist_name} {song_name} lyrics site:genius.com"
@@ -101,7 +104,6 @@ class LyricsService:
 
                 lyrics = "\n".join(lines)
 
-                # Lyrics 이후만 추출
                 if "Lyrics" in lyrics:
                     lyrics = lyrics.split("Lyrics", 1)[-1].strip()
 
