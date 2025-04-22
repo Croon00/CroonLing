@@ -17,8 +17,13 @@ class LyricsService:
         # config = load_config()
         self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
-        print("[DEBUG] SERPAPI_KEY =", os.getenv("SERPAPI_KEY"))
+        # ✅ 환경변수 로드 확인 로그
+        self.logger.debug(f"[DEBUG] SERPAPI_KEY (env): {os.getenv('SERPAPI_KEY')}")
         self.serpapi_key = "763cccf333ef2f11902aa5ab8af334843fe23edf0b30394344c0893b9d5ef3a5"
+        
+        if not self.serpapi_key:
+            self.logger.warning("⚠️ SERPAPI_KEY가 환경변수에서 로드되지 않았습니다.")
+
 
     async def get_lyrics(self, song_id):
         try:
