@@ -1,6 +1,7 @@
 import requests
 import logging
 from bs4 import BeautifulSoup
+import os
 
 from database import LyricsDB
 from config_loader import load_config  # ✅ 추가
