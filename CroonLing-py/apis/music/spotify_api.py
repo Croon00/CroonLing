@@ -84,3 +84,77 @@ class SpotifyAPI:
             "images": artist_data.get("images", []),  # 여러 해상도의 이미지 리스트
             "popularity": artist_data.get("popularity")
         }
+
+    async def get_track_popularity(self, track_id):
+        """
+        Spotify 트랙의 인기도를 조회하는 메서드
+        - track_id: 트랙의 Spotify ID
+        """
+        endpoint = f"tracks/{track_id}"
+        track_data = await self.get(endpoint)
+
+        if not track_data:
+            return None
+
+        popularity = track_data.get("popularity", 0)
+        status = "🔥 매우 인기" if popularity > 80 else "👍 중간 인기" if popularity > 50 else "🌱 인지도가 낮음"
+
+        return {
+            "song_id": track_data.get("id"),
+            "song_name": track_data.get("name"),
+            "artist_name": track_data["artists"][0]["name"],
+            "popularity": popularity,
+            "popularity_status": status
+        }
+
+
+    async def get_recommendations(self, seed_track_id):
+        """
+        Spotify 추천 트랙을 가져오는 메서드
+        - seed_track_id: 기준이 되는 트랙의 Spotify ID
+        """
+        endpoint = "recommendations"
+        params = {
+            "seed_tracks": seed_track_id,
+            "limit": 5
+        }
+
+        recommendations = await self.get(endpoint, params)
+
+        if not recommendations or "tracks" not in recommendations:
+            return None
+
+        result = []
+        for track in recommendations["tracks"]:
+            result.append({
+                "song_id": track["id"],
+                "song_name": track["name"],
+                "artist_name": track["artists"][0]["name"],
+                "spotify_url": track["external_urls"]["spotify"],
+                "popularity": track["popularity"]
+            })
+
+        return result
+
+
+    async def get_related_artists(self, artist_id):
+        """
+        Spotify 유사 아티스트를 조회하는 메서드
+        - artist_id: 기준이 되는 아티스트의 Spotify ID
+        """
+        endpoint = f"artists/{artist_id}/related-artists"
+        data = await self.get(endpoint)
+
+        if not data or "artists" not in data:
+            return None
+
+        result = []
+        for artist in data["artists"][:5]:  # 최대 5명 제한
+            result.append({
+                "artist_id": artist["id"],
+                "artist_name": artist["name"],
+                "genres": artist["genres"],
+                "popularity": artist["popularity"]
+            })
+
+        return result
