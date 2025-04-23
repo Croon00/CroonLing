@@ -3,6 +3,7 @@ FROM gradle:8.4.0-jdk21 AS build
 WORKDIR /app
 
 COPY . .
+RUN chmod +x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # 2단계: Run
