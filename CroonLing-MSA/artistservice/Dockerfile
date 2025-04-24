@@ -7,7 +7,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # 2단계: Run
-FROM eclipse-temurin:21-jdk-jammy  # 또는 alpine
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
