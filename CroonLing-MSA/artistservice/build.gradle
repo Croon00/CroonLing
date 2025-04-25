@@ -12,6 +12,25 @@ java {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+	main {
+		java {
+			srcDirs += querydslDir
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.annotationProcessorGeneratedSourcesDirectory = querydslDir
+}
+
+tasks.named('clean') {
+	doFirst {
+		delete querydslDir
+	}
+}
 
 configurations {
 	compileOnly {
@@ -25,7 +44,7 @@ repositories {
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1" // ✅ Spring Boot 3.4.x 대응
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
 	}
 }
 
@@ -35,23 +54,29 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // 🔽 이거 버전 해결됨
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-	// ✅ Kafka 관련 의존성 추가
+	// ✅ Kafka 관련
 	implementation 'org.springframework.kafka:spring-kafka'
 
-	// ✅ JSON 데이터 변환 (Kafka 메시지 직렬화/역직렬화)
+	// ✅ JSON 직렬화/역직렬화
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// ✅ QueryDSL
+	implementation "com.querydsl:querydsl-jpa:5.1.0:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:5.1.0:jakarta"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api:3.1.0"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api:2.1.1"
 
 	// ✅ Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// ✅ MariaDB 드라이버
+	// ✅ MariaDB
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-	// ✅ 테스트 관련 라이브러리
+	// ✅ 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'

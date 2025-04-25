@@ -1,7 +1,7 @@
 // LyricsKafkaConsumer.java
 package com.croonling.lyricsservice.kafka;
 
-import com.croonling.lyricsservice.dto.LyricsRequestDto;
+import com.croonling.lyricsservice.model.dto.LyricsRequestDto;
 import com.croonling.lyricsservice.service.LyricsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

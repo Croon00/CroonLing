@@ -1,6 +1,6 @@
-package com.croonling.lyricsservice.dto;
+package com.croonling.lyricsservice.model.dto;
 
-import com.croonling.lyricsservice.entity.Lyrics;
+import com.croonling.lyricsservice.model.entity.Lyrics;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,8 @@
 package com.croonling.userservice.service;
 
-import com.croonling.userservice.dto.UserRequestDto;
-import com.croonling.userservice.dto.UserResponseDto;
-import com.croonling.userservice.entity.User;
+import com.croonling.userservice.model.dto.UserRequestDto;
+import com.croonling.userservice.model.dto.UserResponseDto;
+import com.croonling.userservice.model.entity.User;
 import com.croonling.userservice.exception.UserNotFoundException;
 import com.croonling.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;

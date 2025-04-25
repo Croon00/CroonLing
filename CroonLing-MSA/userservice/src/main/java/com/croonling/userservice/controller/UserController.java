@@ -1,7 +1,7 @@
 package com.croonling.userservice.controller;
 
-import com.croonling.userservice.dto.UserRequestDto;
-import com.croonling.userservice.dto.UserResponseDto;
+import com.croonling.userservice.model.dto.UserRequestDto;
+import com.croonling.userservice.model.dto.UserResponseDto;
 import com.croonling.userservice.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

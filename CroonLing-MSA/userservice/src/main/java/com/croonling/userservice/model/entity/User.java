@@ -1,4 +1,4 @@
-package com.croonling.userservice.entity;
+package com.croonling.userservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

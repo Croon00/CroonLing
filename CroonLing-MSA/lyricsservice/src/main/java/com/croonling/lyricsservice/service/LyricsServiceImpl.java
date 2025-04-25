@@ -1,9 +1,9 @@
 // LyricsServiceImpl.java
 package com.croonling.lyricsservice.service;
 
-import com.croonling.lyricsservice.dto.LyricsRequestDto;
-import com.croonling.lyricsservice.dto.LyricsResponseDto;
-import com.croonling.lyricsservice.entity.Lyrics;
+import com.croonling.lyricsservice.model.dto.LyricsRequestDto;
+import com.croonling.lyricsservice.model.dto.LyricsResponseDto;
+import com.croonling.lyricsservice.model.entity.Lyrics;
 import com.croonling.lyricsservice.repository.LyricsRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,4 +37,6 @@ public class LyricsServiceImpl implements LyricsService {
                 .orElseThrow(() -> new RuntimeException("해당 가사가 없습니다. ID: " + songId));
         return LyricsResponseDto.fromEntity(lyrics);
     }
+
+
 }

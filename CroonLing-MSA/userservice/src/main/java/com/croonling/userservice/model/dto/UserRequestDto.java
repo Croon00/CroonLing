@@ -1,4 +1,4 @@
-package com.croonling.userservice.dto;
+package com.croonling.userservice.model.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

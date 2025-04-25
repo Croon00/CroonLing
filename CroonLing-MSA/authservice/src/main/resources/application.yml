@@ -16,6 +16,7 @@ spring:
           discord:
             client-id: ${DISCORD_CLIENT_ID}
             client-secret: ${DISCORD_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
             scope: identify,email
             redirect-uri: "{baseUrl}/login/oauth2/code/discord"
         provider:

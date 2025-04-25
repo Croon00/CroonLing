@@ -1,7 +1,7 @@
 package com.croonling.lyricsservice.service;
 
-import com.croonling.lyricsservice.dto.LyricsRequestDto;
-import com.croonling.lyricsservice.dto.LyricsResponseDto;
+import com.croonling.lyricsservice.model.dto.LyricsRequestDto;
+import com.croonling.lyricsservice.model.dto.LyricsResponseDto;
 
 public interface LyricsService {
     void saveFromKafka(LyricsRequestDto dto);

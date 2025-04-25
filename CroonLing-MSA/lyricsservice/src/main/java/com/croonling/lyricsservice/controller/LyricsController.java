@@ -1,7 +1,7 @@
 // LyricsController.java
 package com.croonling.lyricsservice.controller;
 
-import com.croonling.lyricsservice.dto.LyricsResponseDto;
+import com.croonling.lyricsservice.model.dto.LyricsResponseDto;
 import com.croonling.lyricsservice.service.LyricsService;
 import org.springframework.web.bind.annotation.*;
 

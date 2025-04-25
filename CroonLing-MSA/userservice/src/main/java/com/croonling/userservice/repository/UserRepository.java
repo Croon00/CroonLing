@@ -1,6 +1,6 @@
 package com.croonling.userservice.repository;
 
-import com.croonling.userservice.entity.User;
+import com.croonling.userservice.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

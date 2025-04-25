@@ -1,4 +1,4 @@
-package com.croonling.lyricsservice.dto;
+package com.croonling.lyricsservice.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -13,6 +13,26 @@ java {
 	}
 }
 
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+	main {
+		java {
+			srcDirs += querydslDir
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.annotationProcessorGeneratedSourcesDirectory = querydslDir
+}
+
+tasks.named('clean') {
+	doFirst {
+		delete querydslDir
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -37,6 +57,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+
+	// ✅ QueryDSL (Jakarta 기반)
+	implementation "com.querydsl:querydsl-jpa:5.1.0:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:5.1.0:jakarta"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api:3.1.0"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api:2.1.1"
 
 
 	// ✅ Kafka 관련 의존성 추가

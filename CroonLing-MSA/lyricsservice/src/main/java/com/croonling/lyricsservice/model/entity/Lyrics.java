@@ -1,4 +1,4 @@
-package com.croonling.lyricsservice.entity;// com.croonling.lyricsservice.model.entity.Lyrics.java
+package com.croonling.lyricsservice.model.entity;// com.croonling.lyricsservice.model.entity.Lyrics.java
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,6 +1,6 @@
-package com.croonling.userservice.dto;
+package com.croonling.userservice.model.dto;
 
-import com.croonling.userservice.entity.User;
+import com.croonling.userservice.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
