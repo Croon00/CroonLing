@@ -8,3 +8,8 @@ export interface Artist {
   profileImageUrl: string;
   externalUrl: string;
 }
+
+export type ArtistListItem = Pick<
+  Artist,
+  "artistId" | "artistNames" | "genres" | "popularity" | "profileImageUrl"
+>;

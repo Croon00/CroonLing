@@ -13,3 +13,5 @@ export interface Song {
   phoneticsLyrics: string;
   phoneticsKoreanLyrics: string;
 }
+
+export type SongListItem = Pick<Song, "songId" | "songNames" | "trackImageUrl">;
