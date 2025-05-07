@@ -43,7 +43,7 @@ class LyricsService:
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-software-rasterizer")
         options.add_argument("--window-size=1920,1080")
-        options.add_argument("--headless")  # ✅ "new" 옵션 제거
+        # options.add_argument("--headless")  # ✅ "new" 옵션 제거
         options.add_argument("--remote-debugging-port=9222")  # ✅ 디버그 포트 설정
         options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
         options.add_argument("--disable-blink-features=AutomationControlled")
