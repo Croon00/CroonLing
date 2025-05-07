@@ -54,25 +54,17 @@ class LyricsService:
         options.add_argument("--disable-popup-blocking")
         options.add_argument("--disable-extensions")
 
-        # ✅ 환경변수에서 크롬 및 드라이버 경로 가져오기
-        chrome_binary = os.getenv('CHROME_BINARY', '/usr/bin/google-chrome')
-        chromedriver_path = os.getenv('CHROMEDRIVER_PATH', '/usr/bin/chromedriver')
-
-        # ✅ 가상 디스플레이 시작 (Headless 환경 대체)
+        # ✅ ChromeDriver 동적 설정
+        driver = None
         display = Display(visible=0, size=(1920, 1080))
         display.start()
 
         driver = None
         try:
-            driver = uc.Chrome(
-                options=options,
-                browser_executable_path=chrome_binary,
-                driver_executable_path=chromedriver_path
-            )
-            
+            # ✅ 이 부분이 버전에 맞춰 자동으로 ChromeDriver를 맞춥니다.
+            driver = uc.Chrome(options=options)
+
             self.logger.debug(f"📡 Google 검색 요청: {query}")
-            
-            # 페이지 로드
             driver.get(url)
             driver.implicitly_wait(10)
             time.sleep(random.uniform(3, 5))

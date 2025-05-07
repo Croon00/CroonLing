@@ -29,17 +29,16 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# ✅ 4️⃣ 최신 Chrome 설치
+# ✅ 4️⃣ 최신 Chrome 설치 (현재 최신 버전)
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb
 
-# ✅ 5️⃣ ChromeDriver 수동 설치
-RUN wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && mv chromedriver /usr/bin/chromedriver \
-    && chmod +x /usr/bin/chromedriver \
-    && rm chromedriver_linux64.zip
+# ✅ 5️⃣ ChromeDriver 동적 다운로드
+# undetected_chromedriver에서 버전에 맞춰 자동 설치
+RUN pip install --upgrade pip \
+    && pip install undetected-chromedriver \
+    && rm -rf /root/.cache/pip
 
 # ✅ 6️⃣ setuptools, packaging 설치
 RUN pip install --upgrade pip setuptools wheel packaging
