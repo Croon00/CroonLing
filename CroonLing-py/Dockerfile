@@ -58,4 +58,4 @@ ENV PYTHONUNBUFFERED=1 \
 COPY . .
 
 # ✅ 10️⃣ 실행할 명령어 설정
-CMD ["xvfb-run", "-a", "python", "-u", "main.py"]
+CMD ["run", "-a", "python", "-u", "main.py"]
