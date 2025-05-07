@@ -6,20 +6,36 @@ FROM python:3.12-bullseye
 # ✅ 2️⃣ 작업 디렉토리 설정
 WORKDIR /app
 
-# ✅ 3️⃣ Chrome 및 드라이버 설치
+# ✅ 3️⃣ 필요한 패키지 설치 (Chrome Dependencies)
 RUN apt-get update && apt-get install -y \
-    curl \
+    wget \
     unzip \
     fonts-noto-cjk \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libxcomposite1 \
+    libxkbcommon0 \
+    libxrandr2 \
+    xdg-utils \
     xvfb \
-    && rm -rf /var/lib/apt/lists/*
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # ✅ 4️⃣ 최신 Chrome 설치 (버전 136)
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb
 
-# ✅ 5️⃣ 최신 ChromeDriver 설치 (버전 136)
+# ✅ 5️⃣ 최신 ChromeDriver 설치
 RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') \
     && wget https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
