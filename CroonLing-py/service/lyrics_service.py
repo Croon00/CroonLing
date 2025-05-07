@@ -54,11 +54,13 @@ class LyricsService:
             
             # 페이지 로드
             driver.get(url)
+            driver.implicitly_wait(10)
             time.sleep(random.uniform(3, 5))  # 페이지 로드 대기
 
-            # 페이지 스크롤 (동적 콘텐츠 로드 유도)
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(random.uniform(1, 2))
+            # 페이지 끝까지 반복 스크롤
+            for _ in range(3):
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(2)  # 스크롤 후 로딩 대기
 
             # HTML 가져오기
             html_content = driver.page_source
@@ -85,7 +87,8 @@ class LyricsService:
     def _extract_lyrics_from_google(self, html_content):
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
-            lyrics_elements = soup.find_all('span', {'jsname': 'YS01Ge'})
+            # 구글 가사 부분 추출
+            lyrics_elements = soup.find_all('div', class_='BNeawe tAd8D AP7Wnd')
             
             if not lyrics_elements:
                 self.logger.warning("⚠️ 가사 요소를 찾을 수 없습니다.")
