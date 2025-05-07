@@ -12,7 +12,9 @@ httpx
 beautifulsoup4
 
 # Selenium (웹 스크래핑 시 필요)
-selenium webdriver-manager undetected-chromedriver>=3.5.5 # ✅ undetected_chromedriver 추가
+selenium
+webdriver-manager
+undetected-chromedriver>=3.5.5 # ✅ undetected_chromedriver 추가
 
 # OpenAI API 관련 패키지
 openai
