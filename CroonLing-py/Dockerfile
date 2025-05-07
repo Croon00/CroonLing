@@ -1,5 +1,3 @@
-# Dockerfile
-
 # ✅ 1️⃣ Python 3.12 기반 bullseye 이미지 사용
 FROM python:3.12-bullseye
 
@@ -10,6 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
+    xvfb \
     fonts-noto-cjk \
     fonts-liberation \
     libasound2 \
@@ -26,7 +25,6 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libxrandr2 \
     xdg-utils \
-    xvfb \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
@@ -36,7 +34,6 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
     && rm google-chrome-stable_current_amd64.deb
 
 # ✅ 5️⃣ ChromeDriver 수동 설치
-# Google Chrome 136.x는 현재 storage에 존재하지 않으므로, 135.x 최신버전으로 대체
 RUN wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
     && unzip chromedriver_linux64.zip \
     && mv chromedriver /usr/bin/chromedriver \
@@ -60,4 +57,4 @@ ENV PYTHONUNBUFFERED=1 \
 COPY . .
 
 # ✅ 10️⃣ 실행할 명령어 설정
-CMD ["python", "-u", "main.py"]
+CMD ["xvfb-run", "-a", "python", "-u", "main.py"]
