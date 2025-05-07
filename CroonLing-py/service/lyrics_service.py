@@ -54,7 +54,7 @@ class LyricsService:
         # ✅ ChromeDriver 강제 경로 지정
         driver = None
         try:
-            driver = uc.Chrome(options=options, browser_executable_path="/usr/bin/chromium", use_subprocess=True)
+            driver = uc.Chrome(options=options, browser_executable_path="/usr/bin/google-chrome", use_subprocess=True)
             self.logger.debug(f"📡 Google 검색 요청: {query}")
             
             # 페이지 로드
