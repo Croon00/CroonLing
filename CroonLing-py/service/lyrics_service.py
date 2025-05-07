@@ -1,9 +1,10 @@
-import requests
-import logging
+import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
-
+import logging
+import time
+import random
 from database import LyricsDB
-from config_loader import load_config  # ✅ 추가
+from config_loader import load_config
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -12,11 +13,9 @@ logging.basicConfig(
 
 class LyricsService:
     def __init__(self):
-        # ✅ 환경 변수 로드 방식 변경
         config = load_config()
         self.lyrics_db = LyricsDB()
         self.logger = logging.getLogger(__name__)
-        self.serpapi_key = config.get("SERPAPI_KEY")
 
     async def get_lyrics(self, song_id):
         try:
@@ -34,50 +33,42 @@ class LyricsService:
     async def fetch_and_save_lyrics(self, song_id, artist_name, song_name):
         self.logger.info(f"🔍 가사 검색 시작: {artist_name} - {song_name}")
 
-        if not self.serpapi_key:
-            self.logger.error("❌ SERPAPI_KEY 설정이 누락되었습니다.")
-            return None
+        query = f"{artist_name} {song_name} lyrics"
+        url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
 
-        query = f"{artist_name} {song_name} lyrics site:genius.com"
-        search_url = "https://serpapi.com/search"
+        # undetected-chromedriver 설정
+        options = uc.ChromeOptions()
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
 
-        params = {
-            "engine": "google",
-            "q": query,
-            "hl": "ja",
-            "gl": "jp",
-            "location": "Japan",
-            "api_key": self.serpapi_key,
-            "num": 5,
-        }
-
+        # ChromeDriver 초기화
+        driver = None
         try:
-            self.logger.debug(f"📡 SerpAPI 요청: {query}")
-            response = requests.get(search_url, params=params, timeout=10)
-            data = response.json()
+            driver = uc.Chrome(options=options, use_subprocess=True)
+            self.logger.debug(f"📡 Google 검색 요청: {query}")
+            
+            # 페이지 로드
+            driver.get(url)
+            time.sleep(random.uniform(3, 5))  # 페이지 로드 대기
 
-            if response.status_code != 200 or "organic_results" not in data:
-                self.logger.error("❌ SerpAPI 응답 오류 또는 결과 없음")
-                return None
+            # 페이지 스크롤 (동적 콘텐츠 로드 유도)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(random.uniform(1, 2))
 
-            genius_url = None
-            for result in data["organic_results"]:
-                url = result.get("link", "")
-                if "genius.com" in url:
-                    genius_url = url
-                    break
-
-            if not genius_url:
-                self.logger.warning("⚠️ Genius 링크를 찾지 못했습니다.")
-                return None
-
-            self.logger.info(f"🎯 Genius 가사 페이지: {genius_url}")
-            lyrics = self._extract_lyrics_from_genius(genius_url)
+            # HTML 가져오기
+            html_content = driver.page_source
+            lyrics = self._extract_lyrics_from_google(html_content)
 
             if lyrics:
                 self.logger.info("✅ 가사 추출 및 저장 완료")
-                await self.lyrics_db.upsert_lyrics(song_id, lyrics)
-                return lyrics
+                lyrics_text = "\n".join(lyrics)
+                await self.lyrics_db.upsert_lyrics(song_id, lyrics_text)
+                return lyrics_text
             else:
                 self.logger.warning("⚠️ 유효한 가사를 찾지 못했습니다.")
                 return None
@@ -86,35 +77,23 @@ class LyricsService:
             self.logger.exception(f"❌ 가사 추출 과정 중 오류 발생: {e}")
             return None
 
-    def _extract_lyrics_from_genius(self, url):
+        finally:
+            if driver:
+                driver.quit()  # 브라우저 종료
+            time.sleep(random.uniform(1, 3))  # 요청 간 대기
+
+    def _extract_lyrics_from_google(self, html_content):
         try:
-            headers = {"User-Agent": "Mozilla/5.0"}
-            res = requests.get(url, headers=headers, timeout=10)
-            soup = BeautifulSoup(res.text, "html.parser")
-
-            containers = soup.select("div[data-lyrics-container='true']")
-            if containers:
-                lines = []
-                for block in containers:
-                    text = block.get_text(strip=True)
-                    if len(text) < 10:
-                        continue
-                    lines.append(text)
-
-                lyrics = "\n".join(lines)
-
-                if "Lyrics" in lyrics:
-                    lyrics = lyrics.split("Lyrics", 1)[-1].strip()
-
-                return lyrics.strip()
-
-            # fallback
-            fallback = soup.select_one("div.lyrics")
-            if fallback:
-                return fallback.get_text(strip=True)
-
-            return None
+            soup = BeautifulSoup(html_content, 'html.parser')
+            lyrics_elements = soup.find_all('span', {'jsname': 'YS01Ge'})
+            
+            if not lyrics_elements:
+                self.logger.warning("⚠️ 가사 요소를 찾을 수 없습니다.")
+                return None
+            
+            lyrics = [element.get_text().strip() for element in lyrics_elements]
+            return lyrics
 
         except Exception as e:
-            self.logger.exception(f"❌ Genius 가사 파싱 오류: {e}")
+            self.logger.exception(f"❌ Google 가사 파싱 오류: {e}")
             return None

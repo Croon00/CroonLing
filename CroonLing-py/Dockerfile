@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     chromium \
     chromium-driver \
+    fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 
 # ✅ 4️⃣ requirements.txt 패키지 설치
@@ -17,8 +18,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 환경 변수 설정 (로그 즉시 출력)
-ENV PYTHONUNBUFFERED=1
-
+ENV PYTHONUNBUFFERED=1 \
+    DISPLAY=:99 \
+    CHROMEDRIVER_PATH=/usr/bin/chromedriver \
+    CHROME_BINARY=/usr/bin/chromium
 # ✅ 5️⃣ 소스 코드 복사
 COPY . .
 
