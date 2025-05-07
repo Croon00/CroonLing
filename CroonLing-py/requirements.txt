@@ -5,6 +5,7 @@ typing-extensions
 
 # MongoDB 연결
 pymongo
+motor  # ✅ 추가됨
 
 # API 요청 및 웹 크롤링 관련 패키지
 requests
@@ -14,29 +15,30 @@ beautifulsoup4
 # Selenium (웹 스크래핑 시 필요)
 selenium
 webdriver-manager
-undetected-chromedriver>=3.5.5 # ✅ undetected_chromedriver 추가
+undetected-chromedriver>=4.0.0
 
 # OpenAI API 관련 패키지
 openai
 
 # 환경변수 로드
-python-dotenv  # ✅ .env 파일에서 환경변수 로드
+python-dotenv
 
 # 로깅 개선 (선택 사항)
-loguru  # 강력한 로깅 라이브러리
+loguru
 
 # 비동기 HTTP 요청 (선택 사항)
-aiohttp  # `requests`보다 비동기 환경에서 효율적
+aiohttp
 
 # API 요청 재시도 (선택 사항)
-tenacity  # OpenAI API, Selenium 요청 실패 시 재시도 로직 구현 가능
+tenacity
 
 # 비동기 최적화 (선택 사항)
-uvloop  # asyncio 성능 향상
+uvloop
 
 # REST API 서버 운영 (선택 사항)
 fastapi
 gunicorn
 
-# mongoDB 비동기 기반 드라이버
-motor
+# Python 3.12 호환성
+setuptools>=70.0.0
+packaging>=23.0  # ✅ 추가됨
