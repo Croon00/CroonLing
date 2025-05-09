@@ -100,7 +100,7 @@ class LyricsService:
     def _extract_lyrics_from_google(self, html_content):
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
-            lyrics_elements = soup.find_all('div', class_='BNeawe tAd8D AP7Wnd')
+            lyrics_elements = soup.find_all('span', {'jsname': 'YS01Ge'})
             if not lyrics_elements:
                 self.logger.warning("⚠️ 가사 요소를 찾을 수 없습니다.")
                 return None
