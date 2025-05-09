@@ -39,22 +39,19 @@ RUN pip install --upgrade pip \
     && pip install undetected-chromedriver==3.5.5 \
     && rm -rf /root/.cache/pip
 
-# ✅ 6️⃣ setuptools, packaging 설치
-RUN pip install --upgrade pip setuptools wheel packaging
-
-# ✅ 7️⃣ requirements.txt 패키지 설치
+# ✅ 6️⃣ requirements.txt 설치
 COPY requirements.txt . 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ✅ 8️⃣ 환경 변수 설정
-ENV PYTHONUNBUFFERED=1 \
-    DISPLAY=:99 \
+# ✅ 7️⃣ 환경 변수 설정
+ENV DISPLAY=:99 \
     CHROMEDRIVER_PATH=/usr/bin/chromedriver \
     CHROME_BINARY=/usr/bin/google-chrome
 
-# ✅ 9️⃣ 소스 코드 복사
+# ✅ 8️⃣ 소스 코드 복사
 COPY . .
 
-# ✅ 10️⃣ Xvfb 실행 및 ChromeDriver 초기화
+# ✅ 9️⃣ Xvfb 실행 및 Python 앱 실행
 CMD Xvfb :99 -screen 0 1920x1080x24 & \
+    export DISPLAY=:99 && \
     python -u main.py
