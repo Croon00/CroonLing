@@ -15,7 +15,7 @@ beautifulsoup4
 # Selenium (웹 스크래핑 시 필요)
 selenium
 undetected-chromedriver==3.5.5
-PyVirtualDisplay  # ✅ 추가됨
+pyvirtualdisplay  # ✅ 추가됨
 
 # OpenAI API 관련 패키지
 openai

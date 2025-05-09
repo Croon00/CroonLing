@@ -55,7 +55,6 @@ class LyricsService:
         options.add_argument("--disable-extensions")
 
         # ✅ ChromeDriver 동적 설정
-        driver = None
         display = Display(visible=0, size=(1920, 1080))
         display.start()
 
@@ -69,12 +68,7 @@ class LyricsService:
             driver.implicitly_wait(10)
             time.sleep(random.uniform(3, 5))
 
-            # 페이지 끝까지 반복 스크롤
-            for _ in range(3):
-                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
-
-            # HTML 가져오기
+            # ✅ HTML 가져오기
             html_content = driver.page_source
             lyrics = self._extract_lyrics_from_google(html_content)
 
