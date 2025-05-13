@@ -15,4 +15,6 @@ def load_config():
         "SPOTIFY_CLIENT_SECRET": os.getenv("SPOTIFY_CLIENT_SECRET"),
         "KAFKA_BOOTSTRAP_SERVERS": os.getenv("KAFKA_BOOTSTRAP_SERVERS"),
         "SERPAPI_KEY": os.getenv("SERPAPI_KEY"),
+        "GCP_CRAWLER_IP": os.getenv("GCP_CRAWLER_IP"),
+        "GCP_CRAWLER_PORT": os.getenv("GCP_CRAWLER_PORT")
     }
