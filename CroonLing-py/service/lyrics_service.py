@@ -37,13 +37,19 @@ class LyricsService:
         GCP VM에 배포된 크롤러 API에 요청하여 가사를 가져옵니다.
         """
         self.logger.info(f"🔍 GCP 크롤러에 가사 요청: {artist_name} - {song_name}")
+        start_time = time.time()
 
         try:
-            async with httpx.AsyncClient() as client:
+            timeout = httpx.Timeout(30.0, connect=10.0)  # ✅ timeout 명시적으로 증가
+
+            async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(self.gcp_crawler_url, json={
                     "artist_name": artist_name,
                     "song_name": song_name
                 })
+
+            elapsed = time.time() - start_time
+            self.logger.info(f"📦 GCP 응답 시간: {elapsed:.2f}초")
 
             if response.status_code == 200:
                 data = response.json()
@@ -61,5 +67,6 @@ class LyricsService:
                 return None
 
         except Exception as e:
-            self.logger.exception(f"❌ GCP VM 요청 중 오류 발생: {e}")
+            elapsed = time.time() - start_time
+            self.logger.exception(f"❌ GCP VM 요청 중 오류 발생 (소요 시간: {elapsed:.2f}초): {e}")
             return None
