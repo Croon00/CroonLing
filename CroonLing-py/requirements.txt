@@ -1,44 +1,36 @@
-# Discord 봇 관련 패키지
+# Discord 봇
 discord.py
-pydantic
-typing-extensions
+
+# 환경변수 관리
+python-dotenv
 
 # MongoDB 연결
 pymongo
-motor  # ✅ 추가됨
+motor
 
-# API 요청 및 웹 크롤링 관련 패키지
-requests
+# 웹 요청 및 크롤링
 httpx
+requests
 beautifulsoup4
 
-# Selenium (웹 스크래핑 시 필요)
+# 웹 크롤러용
 selenium
 undetected-chromedriver==3.5.5
-pyvirtualdisplay  # ✅ 추가됨
+pyvirtualdisplay
 
-# OpenAI API 관련 패키지
+# OpenAI API
 openai
 
-# 환경변수 로드
-python-dotenv
-
-# 로깅 개선 (선택 사항)
+# 로깅
 loguru
 
-# 비동기 HTTP 요청 (선택 사항)
+# 비동기 최적화 및 재시도
+uvloop
 aiohttp
-
-# API 요청 재시도 (선택 사항)
 tenacity
 
-# 비동기 최적화 (선택 사항)
-uvloop
-
-# REST API 서버 운영 (선택 사항)
+# REST API
 fastapi
 gunicorn
-
-# Python 3.12 호환성
 setuptools>=70.0.0
-packaging>=23.0  # ✅ 추가됨
+packaging>=23.0
