@@ -1,4 +1,3 @@
-// src/api/lyrics.ts
 import publicAxios from "@/lib/publicAxios";
 import { Lyrics } from "@/types/Lyrics";
 

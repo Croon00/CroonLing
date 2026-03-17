@@ -1,9 +1,9 @@
 import "./globals.css";
-import Navbar from "@/app/components/common/Navbar"; // ✅ Navbar import 추가
+import Navbar from "@/app/components/common/Navbar";
 
 export const metadata = {
   title: "CroonLing",
-  description: "AI 기반 가사 서비스",
+  description: "Browse songs, lyrics, and artists in a refined monochrome UI.",
 };
 
 export default function RootLayout({
@@ -13,9 +13,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased bg-zinc-950 text-white">
-        <Navbar /> {/* ✅ 추가된 부분 */}
-        {children}
+      <body>
+        <div className="min-h-screen">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   );
